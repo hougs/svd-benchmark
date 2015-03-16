@@ -1,2 +1,2 @@
-# svd-benchmark
-A repo for benchmarking distributed implementations of the singular value decomposition.
+# fantasy-football
+Choosing a fantasy football team using spark.
