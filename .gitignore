@@ -14,3 +14,6 @@ hs_err_pid*
 # IDE ignore
 *.iml
 *.idea
+
+#mvn ignore
+target/*

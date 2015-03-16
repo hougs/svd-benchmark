@@ -1,13 +1,14 @@
 package com.cloudera.ds
 
 import org.apache.commons.math3.random.RandomDataGenerator
-import org.apache.mahout.math.SequentialAccessSparseVector
+import org.apache.hadoop.io.IntWritable
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat
+import org.apache.mahout.math.{VectorWritable, SequentialAccessSparseVector}
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 
 object DataIO {
   val blockSize = 1000
-
 
   /** Returns of a sparse vector of not more than nNonZero randomly selected elements. This vector
     * may have less than that many non zero element due to collisions. */
@@ -32,10 +33,16 @@ object DataIO {
 
     val rowIndices: RDD[Int] = sc.parallelize(rowBlockIndex)
       .flatMap(blockIdx => Array.range(blockIdx, blockIdx + blockSize))
-    rowIndices.map(rowIdx => ( rowIdx,makeRandomSparseVec(nCols, nonZero)))
+    rowIndices.map(rowIdx => (new IntWritable(rowIdx), makeRandomSparseVec(nCols, nonZero)))
   }
 
-  def readMatrix(path: String, sc: SparkContext): RDD[(Int, SequentialAccessSparseVector)] = {
-    sc.sequenceFile[Int, SequentialAccessSparseVector](path)
+  def readMatrix(path: String, sc: SparkContext): RDD[(IntWritable, VectorWritable)]
+  = {
+    sc.sequenceFile[IntWritable, VectorWritable](path)
+  }
+
+  def writeMatrix(path: String, matrix: RDD[(IntWritable, VectorWritable)]) = {
+    matrix.saveAsNewAPIHadoopFile(path, classOf[IntWritable], classOf[VectorWritable],
+      classOf[SequenceFileOutputFormat[_, _]])
   }
 }

@@ -166,7 +166,7 @@ License.
         </dependency>
         <dependency>
             <groupId>org.apache.mahout</groupId>
-            <artifactId>mahout-math</artifactId>
+            <artifactId>mahout-core</artifactId>
             <version>${mahout.version}</version>
         </dependency>
         <dependency>
