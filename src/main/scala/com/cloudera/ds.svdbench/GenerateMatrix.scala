@@ -1,4 +1,4 @@
-package com.cloudera.ds
+package com.cloudera.ds.svdbench
 
 import com.quantifind.sumac.{ArgMain, FieldArgs}
 import org.apache.spark.{SparkConf, SparkContext}

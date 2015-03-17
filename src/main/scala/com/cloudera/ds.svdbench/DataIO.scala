@@ -1,4 +1,4 @@
-package com.cloudera.ds
+package com.cloudera.ds.svdbench
 
 import org.apache.commons.math3.random.RandomDataGenerator
 import org.apache.hadoop.io.IntWritable
