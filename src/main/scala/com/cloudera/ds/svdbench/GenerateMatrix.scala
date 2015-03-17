@@ -8,7 +8,7 @@ class Arguments extends FieldArgs {
   var master: String = "local"
   var nRows: Int = 10
   var nCols: Int = 10
-  var nNonZero: Int = 3
+  var fracNonZero: Double = 0.1
   var blockSize: Int = 2
 }
 

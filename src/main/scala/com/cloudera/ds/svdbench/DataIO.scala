@@ -12,7 +12,7 @@ object DataIO {
 
   /** Returns of a sparse vector of not more than nNonZero randomly selected elements. This vector
     * may have less than that many non zero element due to collisions. */
-  def makeRandomSparseVec(size: Int, nNonZero: Int): SequentialAccessSparseVector = {
+  def makeRandomSparseVec(size: Int, fracNonZero: Double): SequentialAccessSparseVector = {
     val vec = new SequentialAccessSparseVector(size)
 
     val dataGen: RandomDataGenerator = {
@@ -20,21 +20,23 @@ object DataIO {
       gen.reSeed(2000)
       gen
     }
-    for (nsample <- 1 to nNonZero) {
-      vec.setQuick(dataGen.nextInt(0, size), 1)
+    for (nsample <- 0 to size -1) {
+      if (dataGen.nextUniform(0,1) < fracNonZero) {
+        vec.setQuick(nsample, 1)
+      }
     }
     vec
   }
 
   /** nRows is rounded up to the nearest thousand*/
-  def generateSparseMatrix(nRows: Int, nCols: Int, nonZero: Int, rowBlockSize: Int = blockSize,
+  def generateSparseMatrix(nRows: Int, nCols: Int, fracNonZero: Double, rowBlockSize: Int = blockSize,
                            sc: SparkContext): RDD[(IntWritable, VectorWritable)] = {
     val rowBlockIndex = Array.range(0, nRows, blockSize)
 
     val rowIndices: RDD[Int] = sc.parallelize(rowBlockIndex)
       .flatMap(blockIdx => Array.range(blockIdx, blockIdx + blockSize))
     val matrix = rowIndices.map(rowIdx => (new IntWritable(rowIdx),
-      new VectorWritable(makeRandomSparseVec(nCols, nonZero))))
+      new VectorWritable(makeRandomSparseVec(nCols, fracNonZero))))
     matrix
   }
 
