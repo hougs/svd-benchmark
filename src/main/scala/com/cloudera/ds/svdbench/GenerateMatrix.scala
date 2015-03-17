@@ -12,7 +12,7 @@ class Arguments extends FieldArgs {
   val blockSize: Int = 2
 }
 
-class GenerateMatrix extends ArgMain[Arguments] {
+object GenerateMatrix extends ArgMain[Arguments] {
   def configure(master: String): SparkConf = {
     val conf = new SparkConf()
     conf.setMaster(master)
