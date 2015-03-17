@@ -27,13 +27,15 @@ object DataIO {
   }
 
   /** nRows is rounded up to the nearest thousand*/
-  def generateSparseMatrix(nRows: Int, nCols: Int, nonZero: Int, sc: SparkContext,
-                           rowBlockSize: Int = blockSize): Unit = {
+  def generateSparseMatrix(nRows: Int, nCols: Int, nonZero: Int, rowBlockSize: Int = blockSize,
+                           sc: SparkContext): RDD[(IntWritable, VectorWritable)] = {
     val rowBlockIndex = Array.range(0, nRows, blockSize)
 
     val rowIndices: RDD[Int] = sc.parallelize(rowBlockIndex)
       .flatMap(blockIdx => Array.range(blockIdx, blockIdx + blockSize))
-    rowIndices.map(rowIdx => (new IntWritable(rowIdx), makeRandomSparseVec(nCols, nonZero)))
+    val matrix = rowIndices.map(rowIdx => (new IntWritable(rowIdx),
+      new VectorWritable(makeRandomSparseVec(nCols, nonZero))))
+    matrix
   }
 
   def readMatrix(path: String, sc: SparkContext): RDD[(IntWritable, VectorWritable)]
