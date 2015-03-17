@@ -4,12 +4,12 @@ import com.quantifind.sumac.{ArgMain, FieldArgs}
 import org.apache.spark.{SparkConf, SparkContext}
 
 class Arguments extends FieldArgs {
-  val path: String = "hdfs://matrix"
-  val master: String = "local"
+  var path: String = "hdfs://matrix"
+  var master: String = "local"
   var nRows: Int = 10
   var nCols: Int = 10
-  val nNonZero: Int = 3
-  val blockSize: Int = 2
+  var nNonZero: Int = 3
+  var blockSize: Int = 2
 }
 
 object GenerateMatrix extends ArgMain[Arguments] {
