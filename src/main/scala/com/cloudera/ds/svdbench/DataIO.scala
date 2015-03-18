@@ -16,9 +16,10 @@ import scala.collection.JavaConverters._
 object DataIO {
   /** Convert a Mahout vector to a Spark vector*/
   def mahoutToSparkVec(vec: VectorWritable): SparkVector = {
-    val inVec: Array[MahoutVector.Element] = vec.get().nonZeroes.asScala.toArray[MahoutVector
-    .Element]
-    Vectors.sparse(inVec.size, inVec.map((elem: MahoutVector.Element) => (elem.index, elem.get)))
+    vec.get().size()
+    val inVec: Iterable[MahoutVector.Element] = vec.get().nonZeroes.asScala
+    val idxVals = inVec.map((elem: MahoutVector.Element) => (elem.index, elem.get))
+    Vectors.sparse(vec.get().size(), idxVals.toSeq)
   }
 
   /** Convert a Spark vector to a Mahout vector*/
@@ -44,9 +45,10 @@ object DataIO {
 
   /** Writes a SparkRowMatrix to a seq file of vector writables. */
   def writeSparkRowMatrix(path: String, matrix: RowMatrix) = {
-    val mahoutMat: RDD[(NullWritable, VectorWritable)] = matrix.rows.map((vec: SparkVector)=>(null,
+    val mahoutMat: RDD[(NullWritable, VectorWritable)] = matrix.rows.map((vec: SparkVector)=>
+      (NullWritable.get(),
       sparkToWritableVec(vec)))
-    mahoutMat.saveAsNewAPIHadoopFile(path, classOf[IntWritable], classOf[VectorWritable],
+    mahoutMat.saveAsNewAPIHadoopFile(path, classOf[NullWritable], classOf[VectorWritable],
       classOf[SequenceFileOutputFormat[_, _]])
   }
   /** Writes a Spark matrix to a UTF-8 encoded csv file. */

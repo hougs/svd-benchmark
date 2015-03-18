@@ -5,7 +5,7 @@
 # sample is less than the specified sparisty level or to zero otherwise. This allows us to
 # approximately specify the percentage of nonzero elements.
 #
-# usage: gen-matrices.sh nRows nCols fracNonZero blockSize master
+# usage: gen-matrices.sh outputPath nRows nCols fracNonZero blockSize master
 # nRows and nCols specify the number of rows and columns in the generated matrix. fracNonZero is
 # the approximate fraction of nonzero elements in the generated matrix. blockSize
 OUT_PATH=$1
@@ -25,3 +25,4 @@ $SPARK_HOME/spark-submit --class com.cloudera.ds.svdbench.GenerateMatrix \
   ./target/svd-benchmark-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
   --path "$OUT_PATH" --nRows "$N_ROWS" \
   --nCols "$N_COLS" --fracNonZero "$FRAC_NON" --blockSize "$BLOCK_SIZE"
+
