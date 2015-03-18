@@ -3,7 +3,7 @@ package com.cloudera.ds.svdbench
 import com.quantifind.sumac.{ArgMain, FieldArgs}
 import org.apache.commons.math3.random.RandomDataGenerator
 import org.apache.hadoop.io.IntWritable
-import org.apache.mahout.math.{VectorWritable, SequentialAccessSparseVector}
+import org.apache.mahout.math.{RandomAccessSparseVector, VectorWritable}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -19,17 +19,14 @@ class GenMatrixArgs extends FieldArgs {
 object GenerateMatrix extends ArgMain[GenMatrixArgs] {
   /** Probabilistically selects approx fracNonZero*size elements of a vector of size `size` to be
    non zero. */
-  def makeRandomSparseVec(size: Int, fracNonZero: Double): SequentialAccessSparseVector = {
-    val vec = new SequentialAccessSparseVector(size)
+  def makeRandomSparseVec(size: Int, fracNonZero: Double): RandomAccessSparseVector = {
+    val vec = new RandomAccessSparseVector(size)
 
-    val dataGen: RandomDataGenerator = {
-      val gen = new RandomDataGenerator()
-      gen.reSeed(2000)
-      gen
-    }
-    for (nsample <- 1 to size) {
+    val dataGen: RandomDataGenerator = new RandomDataGenerator()
+
+    for (nsample <- 0 until size) {
       if (dataGen.nextUniform(0, 1) < fracNonZero){
-        vec.setQuick(nsample, 1)
+        vec.setQuick(nsample, 1.0)
       }
     }
     vec
