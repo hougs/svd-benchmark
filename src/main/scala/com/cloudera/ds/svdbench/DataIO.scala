@@ -45,7 +45,8 @@ object DataIO {
 
   /** Writes a SparkRowMatrix to a seq file of vector writables. */
   def writeSparkRowMatrix(path: String, matrix: RowMatrix) = {
-    val mahoutMat: RDD[(NullWritable, VectorWritable)] = matrix.rows.map((vec: SparkVector)=>(null,
+    val mahoutMat: RDD[(NullWritable, VectorWritable)] = matrix.rows.map((vec: SparkVector)=>
+      (NullWritable.get(),
       sparkToWritableVec(vec)))
     mahoutMat.saveAsNewAPIHadoopFile(path, classOf[IntWritable], classOf[VectorWritable],
       classOf[SequenceFileOutputFormat[_, _]])
