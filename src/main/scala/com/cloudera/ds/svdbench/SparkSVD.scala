@@ -10,7 +10,7 @@ class SVDArgs extends FieldArgs {
   var outUPath = ""
   var outSPath = ""
   var outVPath = ""
-  var master = "yarn-client"
+  var master = "local"
 }
 
 object SparkSVD extends ArgMain[SVDArgs] {
@@ -18,6 +18,7 @@ object SparkSVD extends ArgMain[SVDArgs] {
   def configure(master: String): SparkConf = {
     val conf = new SparkConf()
     conf.setMaster(master)
+    conf.setAppName("Spark SVD")
     conf
   }
 

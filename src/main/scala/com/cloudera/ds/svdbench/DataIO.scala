@@ -1,50 +1,19 @@
 package com.cloudera.ds.svdbench
 
 import java.nio.charset.StandardCharsets
-import java.nio.file.{Paths, Files}
+import java.nio.file.{Files, Paths}
 
-import org.apache.commons.math3.random.RandomDataGenerator
-import org.apache.hadoop.io.{NullWritable, IntWritable}
+import org.apache.hadoop.io.{IntWritable, NullWritable}
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat
-import org.apache.mahout.math.{VectorWritable, SequentialAccessSparseVector,
-Vector => MahoutVector, DenseVector => DenseMahoutVector}
+import org.apache.mahout.math.{VectorWritable, DenseVector => DenseMahoutVector, Vector => MahoutVector}
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.linalg.distributed.RowMatrix
+import org.apache.spark.mllib.linalg.{Matrix, Vectors, Vector => SparkVector}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.mllib.linalg.{Vector => SparkVector, Matrix, Vectors}
+
 import scala.collection.JavaConverters._
 
 object DataIO {
-
-  /** Probabilistically selects approx fracNonZero*size elements of a vector of size `size` to be
-   non zero. */
-  def makeRandomSparseVec(size: Int, fracNonZero: Double): SequentialAccessSparseVector = {
-    val vec = new SequentialAccessSparseVector(size)
-
-    val dataGen: RandomDataGenerator = {
-      val gen = new RandomDataGenerator()
-      gen.reSeed(2000)
-      gen
-    }
-    for (nsample <- 1 to size) {
-      if (dataGen.nextUniform(0, 1) < fracNonZero){
-        vec.setQuick(nsample, 1)
-      }
-    }
-    vec
-  }
-
-  /** nRows is rounded up to the nearest thousand*/
-  def generateSparseMatrix(nRows: Int, nCols: Int, fracNonZero: Double, rowBlockSize: Int,
-                           sc: SparkContext): RDD[(IntWritable, VectorWritable)] = {
-    val rowBlockIndex = Array.range(0, nRows, rowBlockSize)
-
-    val rowIndices: RDD[Int] = sc.parallelize(rowBlockIndex)
-      .flatMap(blockIdx => Array.range(blockIdx, blockIdx + rowBlockSize))
-    val matrix = rowIndices.map(rowIdx => (new IntWritable(rowIdx),
-      new VectorWritable(makeRandomSparseVec(nCols, fracNonZero))))
-    matrix
-  }
   /** Convert a Mahout vector to a Spark vector*/
   def mahoutToSparkVec(vec: VectorWritable): SparkVector = {
     val inVec: Array[MahoutVector.Element] = vec.get().nonZeroes.asScala.toArray[MahoutVector
@@ -75,8 +44,8 @@ object DataIO {
 
   /** Writes a SparkRowMatrix to a seq file of vector writables. */
   def writeSparkRowMatrix(path: String, matrix: RowMatrix) = {
-    val nullWritable = new NullWritable()
-    val mahoutMat = matrix.rows.map((vec: SparkVector)=>(nullWritable, sparkToWritableVec(_)))
+    val mahoutMat: RDD[(NullWritable, VectorWritable)] = matrix.rows.map((vec: SparkVector)=>(null,
+      sparkToWritableVec(vec)))
     mahoutMat.saveAsNewAPIHadoopFile(path, classOf[IntWritable], classOf[VectorWritable],
       classOf[SequenceFileOutputFormat[_, _]])
   }
