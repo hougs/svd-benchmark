@@ -23,7 +23,7 @@ object GenerateMatrix extends ArgMain[GenMatrixArgs] {
     val sc = new SparkContext(configure(args.master))
     val matrix = DataIO.generateSparseMatrix(args.nRows, args.nCols, args.fracNonZero, args.blockSize,
       sc)
-    DataIO.writeMatrix(args.path, matrix)
+    DataIO.writeMahoutMatrix(args.path, matrix)
   }
 
 }

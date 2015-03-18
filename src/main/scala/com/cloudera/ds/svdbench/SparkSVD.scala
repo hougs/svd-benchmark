@@ -7,11 +7,14 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 class SVDArgs extends FieldArgs {
   var inPath = ""
-  var outPath = ""
+  var outUPath = ""
+  var outSPath = ""
+  var outVPath = ""
   var master = "yarn-client"
 }
 
 object SparkSVD extends ArgMain[SVDArgs] {
+  /** Configure our Spark Context. */
   def configure(master: String): SparkConf = {
     val conf = new SparkConf()
     conf.setMaster(master)
@@ -20,7 +23,11 @@ object SparkSVD extends ArgMain[SVDArgs] {
 
   def main(args: SVDArgs): Unit = {
     val sc = new SparkContext(configure(args.master))
-    val matrix: RowMatrix = DataIO.readMatrix(args.inPath, sc)
+    val matrix: RowMatrix = DataIO.readMahoutMatrix(args.inPath, sc)
     val svd: SingularValueDecomposition[RowMatrix, Matrix] = matrix.computeSVD(20, computeU = true)
+    // Write out svd to files.
+    DataIO.writeSparkRowMatrix(args.outUPath, svd.U)
+    DataIO.writeSparkVector(args.outSPath, svd.s)
+    DataIO.writeSparkMatrix(args.outVPath, svd.V)
   }
 }

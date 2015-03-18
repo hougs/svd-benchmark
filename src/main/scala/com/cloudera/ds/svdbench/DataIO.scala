@@ -1,14 +1,17 @@
 package com.cloudera.ds.svdbench
 
+import java.nio.charset.StandardCharsets
+import java.nio.file.{Paths, Files}
+
 import org.apache.commons.math3.random.RandomDataGenerator
-import org.apache.hadoop.io.IntWritable
+import org.apache.hadoop.io.{NullWritable, IntWritable}
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat
 import org.apache.mahout.math.{VectorWritable, SequentialAccessSparseVector,
-Vector => MahoutVector}
+Vector => MahoutVector, DenseVector => DenseMahoutVector}
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.linalg.distributed.RowMatrix
 import org.apache.spark.rdd.RDD
-import org.apache.spark.mllib.linalg.{Vector => SparkVector, Vectors}
+import org.apache.spark.mllib.linalg.{Vector => SparkVector, Matrix, Vectors}
 import scala.collection.JavaConverters._
 
 object DataIO {
@@ -42,22 +45,51 @@ object DataIO {
       new VectorWritable(makeRandomSparseVec(nCols, fracNonZero))))
     matrix
   }
-  /** Convert a Mahout vector to a spark vector*/
-  def vecTovec(vec: VectorWritable): SparkVector = {
+  /** Convert a Mahout vector to a Spark vector*/
+  def mahoutToSparkVec(vec: VectorWritable): SparkVector = {
     val inVec: Array[MahoutVector.Element] = vec.get().nonZeroes.asScala.toArray[MahoutVector
     .Element]
     Vectors.sparse(inVec.size, inVec.map((elem: MahoutVector.Element) => (elem.index, elem.get)))
   }
 
-  def readMatrix(path: String, sc: SparkContext): RowMatrix
+  /** Convert a Spark vector to a Mahout vector*/
+  def sparkToWritableVec(vec: SparkVector): VectorWritable = {
+    new VectorWritable(new DenseMahoutVector(vec.toArray))
+  }
+
+  /** Reads in a sequence file of (IntWritable, VectorWritable) and returns a RowMatrix. */
+  def readMahoutMatrix(path: String, sc: SparkContext): RowMatrix
   = {
     val indexedRows: RDD[SparkVector] = {sc.sequenceFile[IntWritable,
-      VectorWritable](path).values.map((rowVec: VectorWritable) => vecTovec(rowVec))}
+      VectorWritable](path).values.map((rowVec: VectorWritable) => mahoutToSparkVec(rowVec))}
     new RowMatrix(indexedRows)
   }
 
-  def writeMatrix(path: String, matrix: RDD[(IntWritable, VectorWritable)]) = {
+  /** Writes a matrix out in a Mahout readable format. Specifically as a sequence file of
+    * (IntWritable, VectorWritable).
+    * */
+  def writeMahoutMatrix(path: String, matrix: RDD[(IntWritable, VectorWritable)]) = {
     matrix.saveAsNewAPIHadoopFile(path, classOf[IntWritable], classOf[VectorWritable],
       classOf[SequenceFileOutputFormat[_, _]])
+  }
+
+  /** Writes a SparkRowMatrix to a seq file of vector writables. */
+  def writeSparkRowMatrix(path: String, matrix: RowMatrix) = {
+    val nullWritable = new NullWritable()
+    val mahoutMat = matrix.rows.map((vec: SparkVector)=>(nullWritable, sparkToWritableVec(_)))
+    mahoutMat.saveAsNewAPIHadoopFile(path, classOf[IntWritable], classOf[VectorWritable],
+      classOf[SequenceFileOutputFormat[_, _]])
+  }
+  /** Writes a Spark matrix to a UTF-8 encoded csv file. */
+  def writeSparkMatrix(path: String, matrix: Matrix) = {
+    val colLength = matrix.numRows
+    val csvMatrix = matrix.toArray.grouped(colLength).map(column => column.mkString("," +
+      "")).mkString("\n")
+    Files.write(Paths.get(path), csvMatrix.getBytes(StandardCharsets.UTF_8))
+  }
+
+  /** Writes a spark vector to a UTF-8 encoded csv file. */
+  def writeSparkVector(path: String, vector: SparkVector) = {
+    Files.write(Paths.get(path), vector.toArray.mkString(",").getBytes(StandardCharsets.UTF_8))
   }
 }
