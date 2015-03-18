@@ -8,20 +8,20 @@
 # usage: gen-matrices.sh nRows nCols fracNonZero blockSize master
 # nRows and nCols specify the number of rows and columns in the generated matrix. fracNonZero is
 # the approximate fraction of nonzero elements in the generated matrix. blockSize
-
-N_ROWS=$1
-N_COLS=$2
-FRAC_NON=$3
-BLOCK_SIZE=$4
-MASTER=$5
+OUT_PATH=$1
+N_ROWS=$2
+N_COLS=$3
+FRAC_NON=$4
+BLOCK_SIZE=$5
+MASTER=$6
 
 export SPARK_HOME=/home/juliet/bin/spark-1.3.0-bin-hadoop2.4/bin
 export HADOOP_CONF_DIR=/etc/hadoop/conf
 
 $SPARK_HOME/spark-submit --class com.cloudera.ds.svdbench.GenerateMatrix \
-  --conf spark.yarn.jar=hdfs:///user/juliet/bin/spark-1.3.0-bin-hadoop2.4/lib/spark-assembly-1.3.0-hadoop2.4.0.jar \
-  --master $MASTER --executor-memory 8G --num-executors 10 \
+  --verbose --conf spark.yarn.jar=hdfs:///user/juliet/bin/spark-1.3.0-bin-hadoop2.4/lib/spark-assembly-1.3.0-hadoop2.4.0.jar \
+  --master "$MASTER" --executor-memory 8G --num-executors 10 \
   --driver-class-path ./target/svd-benchmark-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
   ./target/svd-benchmark-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
-  --path hdfs:///user/juliet/matrix-svd --nRows $N_ROWS \
-  --nCols $N_COLS --fracNonZero $FRAC_NON --blockSize $BLOCK_SIZE
+  --path "$OUT_PATH" --nRows "$N_ROWS" \
+  --nCols "$N_COLS" --fracNonZero "$FRAC_NON" --blockSize "$BLOCK_SIZE"
