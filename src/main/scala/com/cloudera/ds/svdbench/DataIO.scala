@@ -16,9 +16,10 @@ import scala.collection.JavaConverters._
 object DataIO {
   /** Convert a Mahout vector to a Spark vector*/
   def mahoutToSparkVec(vec: VectorWritable): SparkVector = {
+    vec.get().size()
     val inVec: Iterable[MahoutVector.Element] = vec.get().nonZeroes.asScala
     val idxVals = inVec.map((elem: MahoutVector.Element) => (elem.index, elem.get))
-    Vectors.sparse(inVec.size, idxVals.toSeq)
+    Vectors.sparse(vec.get().size(), idxVals.toSeq)
   }
 
   /** Convert a Spark vector to a Mahout vector*/
