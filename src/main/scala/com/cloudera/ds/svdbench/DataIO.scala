@@ -48,7 +48,7 @@ object DataIO {
     val mahoutMat: RDD[(NullWritable, VectorWritable)] = matrix.rows.map((vec: SparkVector)=>
       (NullWritable.get(),
       sparkToWritableVec(vec)))
-    mahoutMat.saveAsNewAPIHadoopFile(path, classOf[IntWritable], classOf[VectorWritable],
+    mahoutMat.saveAsNewAPIHadoopFile(path, classOf[NullWritable], classOf[VectorWritable],
       classOf[SequenceFileOutputFormat[_, _]])
   }
   /** Writes a Spark matrix to a UTF-8 encoded csv file. */
