@@ -9,5 +9,5 @@ $SPARK_HOME/spark-submit --class com.cloudera.ds.svdbench.GenerateMatrix \
   --driver-class-path ./target/svd-benchmark-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
   ./target/svd-benchmark-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
   --path hdfs:///user/juliet/matrix-svd --nRows 1000 \
-  --nCols 100 --nNonZero 30 --blockSize 100
+  --nCols 100 --fracNonZero 0.01 --blockSize 100
 
