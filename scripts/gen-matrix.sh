@@ -14,8 +14,10 @@ N_COLS=$3
 FRAC_NON=$4
 BLOCK_SIZE=$5
 MASTER=$6
+IN_SPARK_HOME=$7
 
-export SPARK_HOME=/home/juliet/bin/spark-1.3.0-bin-hadoop2.4/bin
+#export SPARK_HOME=/home/juliet/bin/spark-1.3.0-bin-hadoop2.4/bin
+export SPARK_HOME=$IN_SPARK_HOME
 export HADOOP_CONF_DIR=/etc/hadoop/conf
 
 $SPARK_HOME/spark-submit --class com.cloudera.ds.svdbench.GenerateMatrix \

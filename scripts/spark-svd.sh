@@ -13,7 +13,7 @@ OUT_S=$3
 OUT_V=$4
 MASTER=$5
 
-export SPARK_HOME=/home/juliet/bin/spark-1.3.0-bin-hadoop2.4/bin
+export SPARK_HOME=$6
 export HADOOP_CONF_DIR=/etc/hadoop/conf
 
 $SPARK_HOME/spark-submit --class com.cloudera.ds.svdbench.SparkSVD \
