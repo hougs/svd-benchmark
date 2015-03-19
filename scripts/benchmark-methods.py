@@ -4,15 +4,20 @@
 """
 
 import subprocess as sub
-import getopt
+import csv
 import sys
 
-def timeProgram( program ):
-    print program
-    command="time -f --output=time_output.tmp %s" % program
-    p = sub.call(command, shell=True)
-
-    return execTime
+def time_it(program):
+    command="/usr/bin/env time -f \"%E\" " +  program
+    try:
+        p = sub.check_output(command, shell=True, stderr=sub.STDOUT)
+        out = p.communicate()
+    except sub.CalledProcessError, err:
+        print "The command used to launch the failed subprocess is was [%s]." % err.cmd
+        print "The output of the command was [%s]" % err.output
+        #out =err.output
+        raise
+    return out
 
 def generate_matrix(wd, out_path, n_rows, n_cols, frac, block_size, master, spark_home):
     gen_mat_args = (wd.strip(), out_path, n_rows, n_cols, frac, block_size, master, spark_home)
@@ -22,20 +27,26 @@ def generate_matrix(wd, out_path, n_rows, n_cols, frac, block_size, master, spar
     except OSError:
         print "Oops! OS Error. Could not run the command:\n %s" % gen_mat_cmd
 
-def spark_factorize(wd, in_path, out_u, out_s, out_v, master, sparkHome):
+def spark_factorize_and_time(wd, in_path, out_u, out_s, out_v, master, sparkHome):
     svd_args = (wd.strip(), in_path, out_u, out_s, out_v, master, sparkHome)
-    svd_cmd = "%s/scripts/spark-svd.sh %s %s %s %s %s %s" % svd_args
+    svd_cmd = "{%s/scripts/spark-svd.sh %s %s %s %s %s %s 2> spark.logs; }" % svd_args
     try:
-        timeProgram(svd_cmd)
+        elapsed_time = time_it(svd_cmd)
     except OSError:
         print "Oops! OS Error. Could not run the command:\n %s" % svd_cmd
+    return elapsed_time
 
 
-#def process_one_param_set():
+def process_one_param_set(wd, gen_mat_path, n_rows, n_cols, frac, out_u, out_s, out_v, block_size,
+                          master, spark_home, csv_writer):
+    generate_matrix(wd, gen_mat_path, n_rows, n_cols, frac, block_size, master, spark_home)
+    spark_time = spark_factorize_and_time(wd, gen_mat_path, out_u, out_s, out_v, master, spark_home)
+    observation = [str(spark_time)] + ['spark', n_rows, n_cols, frac, block_size]
+    csv_writer.writerow(observation)
 
 
 def main(argv):
-    generated_matrix_path="path"
+    gen_matrix_path="path"
     n_rows=3
     n_cols=3
     frac=0.1
@@ -45,18 +56,18 @@ def main(argv):
     u_path="path"
     s_path="path"
     v_path="path"
-
+    
+    # Setup our env
     wd = sub.check_output("pwd", shell=True)
-    gen_matScript_path = "chmod +x %s/scripts/gen-matrix.sh" % wd
-    sub.call([gen_matScript_path], shell=True)
+    sub.call(["chmod +x %s/scripts/gen-matrix.sh" % wd], shell=True)
     sub.call(["chmod +x %s/scripts/spark-svd.sh" % wd], shell=True)
 
     # bottou spark home /home/juliet/bin/spark-1.3.0-bin-hadoop2.4/bin
-    #generate_matrix(wd, generated_matrix_path, n_rows, n_cols, frac, block_size, master, spark_home)
-    # factor w Spark MLLib and time it
-    spark_args = (generated_matrix_path, u_path, s_path, v_path, master, spark_home)
-    spark_factorize(wd, generated_matrix_path, u_path, s_path, v_path, master, spark_home)
-    # factor with Mahout and time it
+    with open('results/experiment.csv', 'wb') as exp_rez:
+        observation_writer = csv.writer(exp_rez, delimiter=",")
+        for n_rows in [10000, 20000, 400000]:
+            process_one_param_set(wd, gen_matrix_path, n_rows, n_cols, frac, u_path, s_path, v_path, block_size, master,
+                              spark_home, observation_writer)
 
 if __name__ == "__main__":
    main(sys.argv[1:])
