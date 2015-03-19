@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # This script reads in a file representing a matrix from the specified path, uses Mahout's Lanczos
 # implementation to compute the SVD (M=U*S*V^{*}) of the matrix, and writes out a file in HDFS
-# representing the cleaned eigenvectors. We are doing the two stager lanczos here for max accuracy.
+# representing the cleaned eigenvectors. We are doing the two stage lanczos here for max accuracy.
 #
 #
 # usage: lanczos-svd.sh inputPath outPath nRows nCols rank
