@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 """
 
 """
@@ -27,7 +27,7 @@ def generate_matrix(project_root, out_path, n_rows, n_cols, frac, block_size, ma
 
 def spark_factorize_and_time(project_root, in_path, out_u, out_s, out_v, master, sparkHome):
     svd_args = (project_root, in_path, out_u, out_s, out_v, master, sparkHome)
-    svd_cmd = "{%s/scripts/spark-svd.sh %s %s %s %s %s %s 2> spark.logs; }" % svd_args
+    svd_cmd = "echo `%s/scripts/spark-svd.sh %s %s %s %s %s %s 2> spark.logs`" % svd_args
     try:
         elapsed_time = time_it(svd_cmd)
     except OSError:
@@ -84,7 +84,6 @@ def main():
     hdfs_root="hdfs:///user/juliet/matrix"
 
     # Setup our env
-    wd = sub.check_output("pwd", shell=True).strip()
     sub.call(["chmod +x %s/scripts/gen-matrix.sh" % project_root], shell=True)
     sub.call(["chmod +x %s/scripts/spark-svd.sh" % project_root], shell=True)
     sub.call(["chmod +x %s/scripts/lanczos-svd.sh" % project_root], shell=True)
