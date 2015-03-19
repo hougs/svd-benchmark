@@ -36,13 +36,24 @@ def spark_factorize_and_time(wd, in_path, out_u, out_s, out_v, master, sparkHome
         print "Oops! OS Error. Could not run the command:\n %s" % svd_cmd
     return elapsed_time
 
+def lanczos_factorize_and_time(wd, in_path, out_path, n_rows, n_cols, rank):
+    lan_args = (wd.strip(), in_path, out_path, n_rows, n_cols, rank)
+    lan_cmd = "{%s/scripts/lanczos-svd.sh %s %s %s %s %s 2> spark.logs; }" % lan_args
+    try:
+        elapsed_time = time_it(lan_cmd)
+    except OSError:
+        print "Oops! OS Error. Could not run the command:\n %s" % lan_cmd
+    return elapsed_time
 
-def process_one_param_set(wd, gen_mat_path, n_rows, n_cols, frac, out_u, out_s, out_v, block_size,
+
+def process_one_param_set(wd, gen_mat_path, n_rows, n_cols, frac, out_u, out_s, out_v, out_lan, block_size,
                           master, spark_home, csv_writer):
     generate_matrix(wd, gen_mat_path, n_rows, n_cols, frac, block_size, master, spark_home)
     spark_time = spark_factorize_and_time(wd, gen_mat_path, out_u, out_s, out_v, master, spark_home)
-    observation = [str(spark_time)] + ['spark', n_rows, n_cols, frac, block_size]
-    csv_writer.writerow(observation)
+    csv_writer.writerow([spark_time] + ['spark', n_rows, n_cols, frac, block_size])
+    lanczos_time = lanczos_factorize_and_time(gen_mat_path, out_lan, n_rows, n_cols)
+    csv_writer.writerow([lanczos_time] + ['lanczos', n_rows, n_cols, frac])
+
 
 
 def main(argv):
@@ -56,7 +67,8 @@ def main(argv):
     u_path="path"
     s_path="path"
     v_path="path"
-    
+    out_lan="lanpath"
+
     # Setup our env
     wd = sub.check_output("pwd", shell=True)
     sub.call(["chmod +x %s/scripts/gen-matrix.sh" % wd], shell=True)
@@ -66,7 +78,7 @@ def main(argv):
     with open('results/experiment.csv', 'wb') as exp_rez:
         observation_writer = csv.writer(exp_rez, delimiter=",")
         for n_rows in [10000, 20000, 400000]:
-            process_one_param_set(wd, gen_matrix_path, n_rows, n_cols, frac, u_path, s_path, v_path, block_size, master,
+            process_one_param_set(wd, gen_matrix_path, n_rows, n_cols, frac, u_path, s_path, v_path, out_lan, block_size, master,
                               spark_home, observation_writer)
 
 if __name__ == "__main__":

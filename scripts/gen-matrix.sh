@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/usr/bin/env bash
 # This script generates a random matrix with the specified number of rows and columns. Every entry
 # in this matrix is a zero or a one. The elements are specified by drawing from the uniform
 # distribution on (0, 1) for every element in the matrix and setting the value to 1 is the the

@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/usr/bin/env bash
 # This script reads in a file representing a matrix from the specified path, uses spark to compute
 # the SVD (M=U*S*V^{*}) of the matrix, and writes out a file in HDFS for U, and two local files for
 # a vector representation of the singular vectors from S and V.
