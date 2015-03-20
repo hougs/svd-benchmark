@@ -9,8 +9,7 @@ import csv
 def time_it(program):
     command="/usr/bin/env time -f \"%E\" " +  program + " 2>&1 | tail -1"
     try:
-        p = sub.check_output(command, shell=True, stderr=sub.STDOUT)
-        out = p.communicate()
+        out = sub.check_output(command, shell=True, stderr=sub.STDOUT)
     except sub.CalledProcessError, err:
         print "The command used to launch the failed subprocess is was [%s]." % err.cmd
         print "The output of the command was [%s]" % err.output
@@ -36,7 +35,7 @@ def spark_factorize_and_time(project_root, in_path, out_u, out_s, out_v, master,
 
 def lanczos_factorize_and_time(project_root, in_path, out_path, n_rows, n_cols, rank):
     lan_args = (project_root, in_path, out_path, n_rows, n_cols, rank)
-    lan_cmd = "{%s/scripts/lanczos-svd.sh %s %s %s %s %s 2> spark.logs; }" % lan_args
+    lan_cmd = "%s/scripts/lanczos-svd.sh %s %s %s %s %s" % lan_args
     try:
         elapsed_time = time_it(lan_cmd)
     except OSError:
@@ -45,7 +44,7 @@ def lanczos_factorize_and_time(project_root, in_path, out_path, n_rows, n_cols, 
 
 def stochastic_factorize_and_time(project_root, in_path, out_path, rank):
     stoch_args = (project_root, in_path, out_path, rank)
-    stoch_cmd = "{%s/scripts/lanczos-svd.sh %s %s %s 2> spark.logs; }" % stoch_args
+    stoch_cmd = "%s/scripts/stochastic-svd.sh %s %s %s" % stoch_args
     try:
         elapsed_time = time_it(stoch_cmd)
     except OSError:
@@ -72,14 +71,14 @@ def process_one_param_set(n_rows, n_cols, frac, lan_rank, stoch_rank, block_size
                         + ['stoch', n_rows, n_cols, frac])
 
 def main():
-    rows = [20000, 40000, 100000]
-    n_cols=10000
+    rows = [200, 400, 1000]
+    n_cols=100
     frac=[0.5, 0.1, 0.01, 0.001]
     block_size=2
     master="yarn-client"
     spark_home="/home/juliet/bin/spark-1.3.0-bin-hadoop2.4/bin"
-    lan_rank=60
-    stoch_rank=20
+    lan_rank=15
+    stoch_rank=5
     project_root="/home/juliet/src/svd-benchmark"
     hdfs_root="hdfs:///user/juliet/matrix"
 
