@@ -9,7 +9,7 @@ import csv
 def time_it(program):
     command="/usr/bin/env time -f \"%E\" " +  program + " 2>&1 | tail -1"
     try:
-        out = sub.check_output(command, shell=True, stderr=sub.STDOUT)
+        out = sub.check_output(command, shell=True, stderr=sub.STDOUT).strip()
     except sub.CalledProcessError, err:
         print "The command used to launch the failed subprocess is was [%s]." % err.cmd
         print "The output of the command was [%s]" % err.output

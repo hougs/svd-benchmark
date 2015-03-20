@@ -11,8 +11,6 @@
 
 INPUT=$1
 OUTPUT=$2
-NROWS=$3
-NCOLS=$4
-RANK=$5
+RANK=$3
 
 mahout ssvd --input $INPUT --output $OUTPUT --rank $RANK -q 1
