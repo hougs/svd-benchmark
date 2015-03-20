@@ -54,8 +54,7 @@ object DataIO {
   /** Writes a Spark matrix to a UTF-8 encoded csv file. */
   def writeSparkMatrix(path: String, matrix: Matrix) = {
     val colLength = matrix.numRows
-    val csvMatrix = matrix.toArray.grouped(colLength).map(column => column.mkString("," +
-      "")).mkString("\n")
+    val csvMatrix = matrix.toArray.grouped(colLength).map(column => column.mkString(",")).mkString("\n")
     Files.write(Paths.get(path), csvMatrix.getBytes(StandardCharsets.UTF_8))
   }
 

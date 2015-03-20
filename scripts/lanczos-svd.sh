@@ -14,5 +14,4 @@ NROWS=$3
 NCOLS=$4
 RANK=$5
 
-mahout svd --input $INPUT --output $OUTPUT --numRows $NROWS \
-  --numCols $NCOLS --rank $RANK
+mahout svd --input $INPUT --output $OUTPUT --numRows $NROWS --numCols $NCOLS --rank $RANK

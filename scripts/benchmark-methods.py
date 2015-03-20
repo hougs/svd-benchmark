@@ -31,6 +31,7 @@ def spark_factorize_and_time(project_root, in_path, out_u, out_s, out_v, master,
         elapsed_time = time_it(svd_cmd)
     except OSError:
         print "Oops! OS Error. Could not run the command:\n %s" % svd_cmd
+        elapsed_time = "failed"
     return elapsed_time
 
 def lanczos_factorize_and_time(project_root, in_path, out_path, n_rows, n_cols, rank):
@@ -40,6 +41,7 @@ def lanczos_factorize_and_time(project_root, in_path, out_path, n_rows, n_cols, 
         elapsed_time = time_it(lan_cmd)
     except OSError:
         print "Oops! OS Error. Could not run the command:\n %s" % lan_cmd
+        elapsed_time = "failed"
     return elapsed_time
 
 def stochastic_factorize_and_time(project_root, in_path, out_path, rank):
@@ -49,8 +51,8 @@ def stochastic_factorize_and_time(project_root, in_path, out_path, rank):
         elapsed_time = time_it(stoch_cmd)
     except OSError:
         print "Oops! OS Error. Could not run the command:\n %s" % stoch_cmd
+        elapsed_time = "failed"
     return elapsed_time
-
 
 def process_one_param_set(n_rows, n_cols, frac, lan_rank, stoch_rank, block_size, master, spark_home, project_home,
                           hdfs_root, csv_writer):
@@ -62,18 +64,22 @@ def process_one_param_set(n_rows, n_cols, frac, lan_rank, stoch_rank, block_size
     out_lan=hdfs_root + "/lanczos-out-nrow%s-ncols%s-sp%s" % (n_rows, n_cols, frac)
     out_stoch=hdfs_root + "/stoch-out-nrow%s-ncols%s-sp%s" % (n_rows, n_cols, frac)
 
+    print "Generating matrix that will be stored in [%s]." % gen_mat_path
     generate_matrix(project_home, gen_mat_path, n_rows, n_cols, frac, block_size, master, spark_home)
+    print "Spark SVDing the matrix stored in [%s]." % gen_mat_path
     csv_writer.writerow([spark_factorize_and_time(project_home, gen_mat_path, out_u, out_s, out_v, master, spark_home)]
                         + ['spark', n_rows, n_cols, frac, block_size])
+    print "Mahout Lanczos SVDing the matrix stored in [%s]." % gen_mat_path
     csv_writer.writerow([lanczos_factorize_and_time(project_home, gen_mat_path, out_lan, n_rows, n_cols, lan_rank)]
                         + ['lanczos', n_rows, n_cols, frac])
+    print "Mahout Stochastic SVDing the matrix stored in [%s]." % gen_mat_path
     csv_writer.writerow([stochastic_factorize_and_time(project_home, gen_mat_path, out_stoch, stoch_rank)]
                         + ['stoch', n_rows, n_cols, frac])
 
 def main():
     rows = [200, 400, 1000]
     n_cols=100
-    frac=[0.5, 0.1, 0.01, 0.001]
+    frac=[0.5]
     block_size=2
     master="yarn-client"
     spark_home="/home/juliet/bin/spark-1.3.0-bin-hadoop2.4/bin"
