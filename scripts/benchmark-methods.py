@@ -7,7 +7,7 @@ import subprocess as sub
 import csv
 
 def time_it(program):
-    command="/usr/bin/env time -f \"%E\" " +  program
+    command="/usr/bin/env time -f \"%E\" " +  program + " 2>&1 | tail -1"
     try:
         p = sub.check_output(command, shell=True, stderr=sub.STDOUT)
         out = p.communicate()
@@ -27,7 +27,7 @@ def generate_matrix(project_root, out_path, n_rows, n_cols, frac, block_size, ma
 
 def spark_factorize_and_time(project_root, in_path, out_u, out_s, out_v, master, sparkHome):
     svd_args = (project_root, in_path, out_u, out_s, out_v, master, sparkHome)
-    svd_cmd = "echo `%s/scripts/spark-svd.sh %s %s %s %s %s %s 2> spark.logs`" % svd_args
+    svd_cmd = "%s/scripts/spark-svd.sh %s %s %s %s %s %s" % svd_args
     try:
         elapsed_time = time_it(svd_cmd)
     except OSError:
