@@ -54,39 +54,48 @@ def stochastic_factorize_and_time(project_root, in_path, out_path, rank):
         elapsed_time = "failed"
     return elapsed_time
 
-def process_one_param_set(n_rows, n_cols, frac, lan_rank, stoch_rank, block_size, master, spark_home, project_home,
-                          hdfs_root, csv_writer):
+def make_hfds_path(matrix_name, n_rows, n_cols, frac, hdfs_root):
+    return hdfs_root + "/%s-nrow%s-ncols%s-sp%s" % (matrix_name, n_rows, n_cols, frac)
+
+def process_one_param_set(n_rows, n_cols, frac, rank, block_size, master, spark_home, project_home,
+                          hdfs_root, csv_writer, n_samples):
     # setup paths for these matrices
-    gen_mat_path=hdfs_root + "/gen-matrix-nrow%s-ncols%s-sp%s" % (n_rows, n_cols, frac)
-    out_u=hdfs_root + "/u-spark-nrow%s-ncols%s-sp%s" % (n_rows, n_cols, frac)
-    out_s=hdfs_root + "/s-spark-nrow%s-ncols%s-sp%s" % (n_rows, n_cols, frac)
-    out_v=hdfs_root + "/v-spark-nrow%s-ncols%s-sp%s" % (n_rows, n_cols, frac)
-    out_lan=hdfs_root + "/lanczos-out-nrow%s-ncols%s-sp%s" % (n_rows, n_cols, frac)
-    out_stoch=hdfs_root + "/stoch-out-nrow%s-ncols%s-sp%s" % (n_rows, n_cols, frac)
+    gen_mat_path=make_hfds_path("gen-matrix", n_rows, n_cols, frac, hdfs_root)
+    out_u=make_hfds_path("u-spark", n_rows, n_cols, frac, hdfs_root)
+    out_s=make_hfds_path("s-spark", n_rows, n_cols, frac, hdfs_root)
+    out_v=make_hfds_path("v-spark", n_rows, n_cols, frac, hdfs_root)
+    out_lan=make_hfds_path("lanczos", n_rows, n_cols, frac, hdfs_root)
+    out_stoch=make_hfds_path("stochastic", n_rows, n_cols, frac, hdfs_root)
 
     print "Generating matrix that will be stored in [%s]." % gen_mat_path
     generate_matrix(project_home, gen_mat_path, n_rows, n_cols, frac, block_size, master, spark_home)
-    print "Spark SVDing the matrix stored in [%s]." % gen_mat_path
-    csv_writer.writerow([spark_factorize_and_time(project_home, gen_mat_path, out_u, out_s, out_v, master, spark_home)]
-                        + ['spark', n_rows, n_cols, frac, block_size])
-    print "Mahout Lanczos SVDing the matrix stored in [%s]." % gen_mat_path
-    csv_writer.writerow([lanczos_factorize_and_time(project_home, gen_mat_path, out_lan, n_rows, n_cols, lan_rank)]
+
+    for idx in range(n_samples):
+        print "Spark SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
+        csv_writer.writerow([spark_factorize_and_time(project_home, gen_mat_path, out_u, out_s, out_v, master, spark_home)]
+                        + ['spark', n_rows, n_cols, frac])
+    for idx in range(n_samples):
+        print "Mahout Lanczos SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
+        csv_writer.writerow([lanczos_factorize_and_time(project_home, gen_mat_path, out_lan, n_rows, n_cols, 3 * rank)]
                         + ['lanczos', n_rows, n_cols, frac])
-    print "Mahout Stochastic SVDing the matrix stored in [%s]." % gen_mat_path
-    csv_writer.writerow([stochastic_factorize_and_time(project_home, gen_mat_path, out_stoch, stoch_rank)]
+
+    for idx in range(n_samples):
+        print "Mahout Stochastic SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
+        csv_writer.writerow([stochastic_factorize_and_time(project_home, gen_mat_path, out_stoch, rank + 5)]
                         + ['stoch', n_rows, n_cols, frac])
 
 def main():
-    rows = [200, 400, 1000]
-    n_cols=100
-    frac=[0.5]
-    block_size=2
-    master="yarn-client"
+    rows = [10000000, 15000000, 20000000]
+    # .8Gb and 80GB gramian matrices for this many columns. Spark needs at least twice this in driver memory.
+    n_cols=[1000, 10000]
+    frac=[0.2]
+    block_size=5000
+    master="yarn-cluster"
     spark_home="/home/juliet/bin/spark-1.3.0-bin-hadoop2.4/bin"
-    lan_rank=15
-    stoch_rank=5
+    rank=20
     project_root="/home/juliet/src/svd-benchmark"
     hdfs_root="hdfs:///user/juliet/matrix"
+    n_samples=3
 
     # Setup our env
     sub.call(["chmod +x %s/scripts/gen-matrix.sh" % project_root], shell=True)
@@ -98,8 +107,8 @@ def main():
         observation_writer = csv.writer(exp_rez, delimiter=",")
         for n_rows in rows:
             for sparse_frac in frac:
-                process_one_param_set(n_rows, n_cols, sparse_frac, lan_rank, stoch_rank, block_size, master,
-                              spark_home, project_root, hdfs_root, observation_writer)
+                process_one_param_set(n_rows, n_cols, sparse_frac, rank, block_size, master,
+                              spark_home, project_root, hdfs_root, observation_writer, n_samples)
 
 if __name__ == "__main__":
    main()
