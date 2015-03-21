@@ -3,7 +3,7 @@
 # the SVD (M=U*S*V^{*}) of the matrix, and writes out a file in HDFS for U, and two local files for
 # a vector representation of the singular vectors from S and V.
 #
-# usage: spark-svd.sh inputPath outUPath outSPath outVPath master
+# usage: spark-svd.sh inputPath outUPath outSPath outVPath master rank
 # Where inputPath and outUPath are paths in hdfs, outSPath and outVPath are local paths, and
 # master is a URL for a Spark master.
 
@@ -14,7 +14,7 @@ OUT_V=$4
 MASTER=$5
 RANK=$6
 
-export SPARK_HOME=$6
+export SPARK_HOME=$7
 export HADOOP_CONF_DIR=/etc/hadoop/conf
 
 $SPARK_HOME/spark-submit --class com.cloudera.ds.svdbench.SparkSVD \

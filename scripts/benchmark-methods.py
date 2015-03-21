@@ -28,7 +28,7 @@ def generate_matrix(project_root, out_path, n_rows, n_cols, frac, block_size, ma
         print "Oops! OS Error. Could not run the command:\n %s" % gen_mat_cmd
 
 def spark_factorize_and_time(project_root, in_path, out_u, out_s, out_v, master, sparkHome, rank):
-    svd_args = (project_root, in_path, out_u, out_s, out_v, master, sparkHome, rank)
+    svd_args = (project_root, in_path, out_u, out_s, out_v, master, rank, sparkHome)
     svd_cmd = "%s/scripts/spark-svd.sh %s %s %s %s %s %s %s" % svd_args
     try:
         elapsed_time = time_it(svd_cmd)
@@ -95,7 +95,7 @@ def main():
     n_cols=1000
     frac=[0.2]
     block_size=10000
-    master="yarn-cluster"
+    master="yarn-client"
     spark_home="/home/juliet/bin/spark-1.3.0-bin-hadoop2.4/bin"
     rank=20
     project_root="/home/juliet/src/svd-benchmark"
