@@ -27,9 +27,9 @@ def generate_matrix(project_root, out_path, n_rows, n_cols, frac, block_size, ma
     except OSError:
         print "Oops! OS Error. Could not run the command:\n %s" % gen_mat_cmd
 
-def spark_factorize_and_time(project_root, in_path, out_u, out_s, out_v, master, sparkHome):
-    svd_args = (project_root, in_path, out_u, out_s, out_v, master, sparkHome)
-    svd_cmd = "%s/scripts/spark-svd.sh %s %s %s %s %s %s" % svd_args
+def spark_factorize_and_time(project_root, in_path, out_u, out_s, out_v, master, sparkHome, rank):
+    svd_args = (project_root, in_path, out_u, out_s, out_v, master, sparkHome, rank)
+    svd_cmd = "%s/scripts/spark-svd.sh %s %s %s %s %s %s %s" % svd_args
     try:
         elapsed_time = time_it(svd_cmd)
     except OSError:
@@ -76,7 +76,8 @@ def process_one_param_set(n_rows, n_cols, frac, rank, block_size, master, spark_
 
     for idx in range(n_samples):
         print "Spark SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
-        csv_writer.writerow([spark_factorize_and_time(project_home, gen_mat_path, out_u, out_s, out_v, master, spark_home)]
+        csv_writer.writerow([spark_factorize_and_time(project_home, gen_mat_path, out_u, out_s,
+                                                      out_v, master, spark_home, rank)]
                         + ['spark', n_rows, n_cols, frac])
     for idx in range(n_samples):
         print "Mahout Lanczos SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
