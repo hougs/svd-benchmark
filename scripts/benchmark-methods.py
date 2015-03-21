@@ -5,16 +5,19 @@
 
 import subprocess as sub
 import csv
+import time
 
-def time_it(program):
-    command="/usr/bin/env time -f \"%E\" " +  program + " 2>&1 | tail -1"
+def time_it(command):
+    #command="/usr/bin/env time -f \"%E\" " +  program + " 2>&1 | tail -1"
     try:
-        out = sub.check_output(command, shell=True, stderr=sub.STDOUT).strip()
+        start_time = time.clock()
+        sub.check_output(command, shell=True, stderr=sub.STDOUT)
+        end_time = time.clock
     except sub.CalledProcessError, err:
         print "The command used to launch the failed subprocess is was [%s]." % err.cmd
         print "The output of the command was [%s]" % err.output
         raise
-    return out
+    return end_time - start_time
 
 def generate_matrix(project_root, out_path, n_rows, n_cols, frac, block_size, master, spark_home):
     gen_mat_args = (project_root, out_path, n_rows, n_cols, frac, block_size, master, spark_home)
@@ -87,7 +90,7 @@ def process_one_param_set(n_rows, n_cols, frac, rank, block_size, master, spark_
 def main():
     rows = [10000000, 15000000, 20000000]
     # .8Gb and 80GB gramian matrices for this many columns. Spark needs at least twice this in driver memory.
-    n_cols=[1000, 10000]
+    n_cols=1000
     frac=[0.2]
     block_size=5000
     master="yarn-cluster"
