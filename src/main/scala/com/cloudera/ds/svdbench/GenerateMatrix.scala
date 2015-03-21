@@ -2,8 +2,10 @@ package com.cloudera.ds.svdbench
 
 import com.quantifind.sumac.{ArgMain, FieldArgs}
 import org.apache.commons.math3.random.RandomDataGenerator
+import org.apache.commons.math3.analysis.function.{Log, Ceil}
 import org.apache.hadoop.io.IntWritable
-import org.apache.mahout.math.{RandomAccessSparseVector, VectorWritable}
+import org.apache.mahout.math.{SequentialAccessSparseVector, RandomAccessSparseVector,
+VectorWritable}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -13,29 +15,35 @@ class GenMatrixArgs extends FieldArgs {
   var nRows: Int = 10
   var nCols: Int = 10
   var fracNonZero: Double = 0.1
-  var blockSize: Int = 2
+  var nPartitions: Int = 2
 }
 
 object GenerateMatrix extends ArgMain[GenMatrixArgs] {
   /** Probabilistically selects approx fracNonZero*size elements of a vector of size `size` to be
-   non zero. */
-  def makeRandomSparseVec(size: Int, fracNonZero: Double): RandomAccessSparseVector = {
-    val vec = new RandomAccessSparseVector(size)
+   non zero. We generate the index of the next non-zero element by adding a random variable with
+  a geometric distribution (ceiling of a sample from the exponential. )*/
+  def makeRandomSparseVec(size: Int, fracNonZero: Double): SequentialAccessSparseVector = {
+    val vec = new SequentialAccessSparseVector(size)
     val dataGen: RandomDataGenerator = new RandomDataGenerator()
 
-    for (nsample <- 0 until size) {
-      if (dataGen.nextUniform(0, 1) < fracNonZero){
-        vec.setQuick(nsample, 1.0)
-      }
+    var idx = -1
+    val log = new Log()
+    val ceil = new Ceil()
+    while (idx < size) {
+      idx += ceil.value(dataGen.nextExponential(-log.value(1.0-fracNonZero) ))
+      vec.setQuick(idx, 1.0)
     }
     vec
   }
 
   /** nRows is rounded up to the nearest thousand*/
-  def generateSparseMatrix(nRows: Int, nCols: Int, fracNonZero: Double, rowBlockSize: Int,
-                           sc: SparkContext): RDD[(IntWritable, VectorWritable)] = {
+  def generateSparseMatrix(nRows: Int, nCols: Int, fracNonZero: Double,
+                           nPartitions: Int, sc: SparkContext): RDD[(IntWritable,
+    VectorWritable)] = {
+    val rowBlockSize: Int = nRows / nPartitions
     val rowBlockIndex = Array.range(0, nRows, rowBlockSize)
-    val rowIndices: RDD[Int] = sc.parallelize(rowBlockIndex, numSlices = rowBlockIndex.size)
+
+    val rowIndices: RDD[Int] = sc.parallelize(Seq(), nPartitions)
       .flatMap(blockIdx => Array.range(blockIdx, blockIdx + rowBlockSize))
     val matrix = rowIndices.map(rowIdx => (new IntWritable(rowIdx),
       new VectorWritable(makeRandomSparseVec(nCols, fracNonZero))))
@@ -51,8 +59,8 @@ object GenerateMatrix extends ArgMain[GenMatrixArgs] {
 
   def main(args: GenMatrixArgs): Unit = {
     val sc = new SparkContext(configure(args.master))
-    val matrix = generateSparseMatrix(args.nRows, args.nCols, args.fracNonZero, args.blockSize,
-      sc)
+    val matrix = generateSparseMatrix(args.nRows, args.nCols, args.fracNonZero,
+      args.nPartitions, sc)
     DataIO.writeMahoutMatrix(args.path, matrix)
   }
 

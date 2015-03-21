@@ -12,7 +12,7 @@ OUT_PATH=$1
 N_ROWS=$2
 N_COLS=$3
 FRAC_NON=$4
-BLOCK_SIZE=$5
+N_PARTITIONS=$5
 MASTER=$6
 IN_SPARK_HOME=$7
 
@@ -20,11 +20,12 @@ IN_SPARK_HOME=$7
 export SPARK_HOME=$IN_SPARK_HOME
 export HADOOP_CONF_DIR=/etc/hadoop/conf
 
-$SPARK_HOME/spark-submit --class com.cloudera.ds.svdbench.GenerateMatrix \
+$SPARK_HOME/bin/spark-submit --class com.cloudera.ds.svdbench.GenerateMatrix \
   --verbose --conf spark.yarn.jar=hdfs:///user/juliet/bin/spark-1.3.0-bin-hadoop2.4/lib/spark-assembly-1.3.0-hadoop2.4.0.jar \
-  --master "$MASTER" --executor-memory 8G --num-executors 90 --executor-cores 16 \
+  --conf spark.yarn.am.waitTime=300000 \
+  --master "$MASTER" --executor-memory 14g --executor-cores 5 --num-executors 4 \
   --driver-class-path ./target/svd-benchmark-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
   ./target/svd-benchmark-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
   --path "$OUT_PATH" --nRows "$N_ROWS" \
-  --nCols "$N_COLS" --fracNonZero "$FRAC_NON" --blockSize "$BLOCK_SIZE"
+  --nCols "$N_COLS" --fracNonZero "$FRAC_NON" --blockSize "$BLOCK_SIZE" --nPartitions $N_PARTITIONS
 
