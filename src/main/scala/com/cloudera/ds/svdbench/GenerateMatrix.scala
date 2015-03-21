@@ -21,7 +21,6 @@ object GenerateMatrix extends ArgMain[GenMatrixArgs] {
    non zero. */
   def makeRandomSparseVec(size: Int, fracNonZero: Double): RandomAccessSparseVector = {
     val vec = new RandomAccessSparseVector(size)
-
     val dataGen: RandomDataGenerator = new RandomDataGenerator()
 
     for (nsample <- 0 until size) {
@@ -36,7 +35,7 @@ object GenerateMatrix extends ArgMain[GenMatrixArgs] {
   def generateSparseMatrix(nRows: Int, nCols: Int, fracNonZero: Double, rowBlockSize: Int,
                            sc: SparkContext): RDD[(IntWritable, VectorWritable)] = {
     val rowBlockIndex = Array.range(0, nRows, rowBlockSize)
-    val rowIndices: RDD[Int] = sc.parallelize(rowBlockIndex)
+    val rowIndices: RDD[Int] = sc.parallelize(rowBlockIndex, numSlices = rowBlockIndex.size)
       .flatMap(blockIdx => Array.range(blockIdx, blockIdx + rowBlockSize))
     val matrix = rowIndices.map(rowIdx => (new IntWritable(rowIdx),
       new VectorWritable(makeRandomSparseVec(nCols, fracNonZero))))

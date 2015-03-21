@@ -30,8 +30,8 @@ object DataIO {
   /** Reads in a sequence file of (IntWritable, VectorWritable) and returns a RowMatrix. */
   def readMahoutMatrix(path: String, sc: SparkContext): RowMatrix
   = {
-    val indexedRows: RDD[SparkVector] = {sc.sequenceFile[IntWritable,
-      VectorWritable](path).values.map((rowVec: VectorWritable) => mahoutToSparkVec(rowVec))}
+    val mahoutVectors = sc.sequenceFile[IntWritable, VectorWritable](path).values
+    val indexedRows = mahoutVectors.map((rowVec: VectorWritable) => mahoutToSparkVec(rowVec)).cache()
     new RowMatrix(indexedRows)
   }
 

@@ -11,6 +11,7 @@ class SVDArgs extends FieldArgs {
   var outSPath = ""
   var outVPath = ""
   var master = "local"
+  var rank = 20
 }
 
 object SparkSVD extends ArgMain[SVDArgs] {
@@ -25,7 +26,8 @@ object SparkSVD extends ArgMain[SVDArgs] {
   def main(args: SVDArgs): Unit = {
     val sc = new SparkContext(configure(args.master))
     val matrix: RowMatrix = DataIO.readMahoutMatrix(args.inPath, sc)
-    val svd: SingularValueDecomposition[RowMatrix, Matrix] = matrix.computeSVD(20, computeU = true)
+    val svd: SingularValueDecomposition[RowMatrix, Matrix] = matrix.computeSVD(args.rank,
+      computeU = true)
     // Write out svd to files.
     DataIO.writeSparkRowMatrix(args.outUPath, svd.U)
     DataIO.writeSparkVector(args.outSPath, svd.s)

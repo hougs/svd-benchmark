@@ -12,6 +12,7 @@ OUT_U=$2
 OUT_S=$3
 OUT_V=$4
 MASTER=$5
+RANK=$6
 
 export SPARK_HOME=$6
 export HADOOP_CONF_DIR=/etc/hadoop/conf
@@ -21,4 +22,4 @@ $SPARK_HOME/spark-submit --class com.cloudera.ds.svdbench.SparkSVD \
   --master $MASTER --executor-memory 14g --executor-cores 5 --num-executors 24 \
   --driver-class-path ./target/svd-benchmark-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
   ./target/svd-benchmark-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
-  --inPath $INPUT_PATH --outUPath $OUT_U --outSPath $OUT_S --outVPath $OUT_V
+  --inPath $INPUT_PATH --outUPath $OUT_U --outSPath $OUT_S --outVPath $OUT_V --rank $RANK
