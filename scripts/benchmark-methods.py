@@ -70,9 +70,9 @@ def process_one_param_set(n_rows, n_cols, frac, rank, block_size, master, spark_
     out_lan=make_hfds_path("lanczos", n_rows, n_cols, frac, hdfs_root)
     out_stoch=make_hfds_path("stochastic", n_rows, n_cols, frac, hdfs_root)
 
-    #print "Generating matrix that will be stored in [%s]." % gen_mat_path
-    #generate_matrix(project_home, gen_mat_path, n_rows, n_cols, frac, block_size, master,
-    # spark_home)
+    print "Generating matrix that will be stored in [%s]." % gen_mat_path
+    generate_matrix(project_home, gen_mat_path, n_rows, n_cols, frac, block_size, master,
+     spark_home)
 
     for idx in range(n_samples):
         print "Spark SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
@@ -95,8 +95,8 @@ def main():
     n_cols=1000
     frac=[0.2]
     block_size=10000
-    master="yarn-client"
-    spark_home="/home/juliet/bin/spark-1.3.0-bin-hadoop2.4/bin"
+    master="yarn-cluster"
+    spark_home="/home/juliet/bin/spark-1.3.0-bin-hadoop2.4"
     rank=20
     project_root="/home/juliet/src/svd-benchmark"
     hdfs_root="hdfs:///user/juliet/matrix"
