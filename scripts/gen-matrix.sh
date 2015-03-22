@@ -27,5 +27,5 @@ $SPARK_HOME/bin/spark-submit --class com.cloudera.ds.svdbench.GenerateMatrix \
   --driver-class-path ./target/svd-benchmark-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
   ./target/svd-benchmark-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
   --path "$OUT_PATH" --nRows "$N_ROWS" \
-  --nCols "$N_COLS" --fracNonZero "$FRAC_NON" --blockSize "$BLOCK_SIZE" --nPartitions $N_PARTITIONS
+  --nCols "$N_COLS" --fracNonZero "$FRAC_NON" --nPartitions $N_PARTITIONS
 
