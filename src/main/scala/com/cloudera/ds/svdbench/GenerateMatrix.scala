@@ -1,7 +1,7 @@
 package com.cloudera.ds.svdbench
 
 import com.quantifind.sumac.{ArgMain, FieldArgs}
-import org.apache.commons.math3.analysis.function.{Ceil, Log}
+import org.apache.commons.math3.analysis.function.Log
 import org.apache.commons.math3.random.RandomDataGenerator
 import org.apache.hadoop.io.IntWritable
 import org.apache.mahout.math.{SequentialAccessSparseVector, VectorWritable}
@@ -27,9 +27,8 @@ object GenerateMatrix extends ArgMain[GenMatrixArgs] {
 
     var idx = -1
     val log = new Log()
-    val ceil = new Ceil()
     while (idx < size) {
-      idx += ceil.value(dataGen.nextExponential(-log.value(1.0-fracNonZero))).toInt
+      idx += Math.ceil(dataGen.nextExponential(-log.value(1.0-fracNonZero))).toInt
       vec.setQuick(idx, 1.0)
     }
     vec
