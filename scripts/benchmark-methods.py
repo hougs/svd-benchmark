@@ -5,19 +5,19 @@
 
 import subprocess as sub
 import csv
-import time
+import os
 
 def time_it(command):
     #command="/usr/bin/env time -f \"%E\" " +  program + " 2>&1 | tail -1"
     try:
-        start_time = time.clock()
+        start_time = os.times()
         sub.check_output(command, shell=True, stderr=sub.STDOUT)
-        end_time = time.clock()
+        end_time = os.times()
     except sub.CalledProcessError, err:
         print "The command used to launch the failed subprocess is was [%s]." % err.cmd
         print "The output of the command was [%s]" % err.output
         raise
-    return end_time - start_time
+    return end_time[4] - start_time[4]
 
 def generate_matrix(project_root, out_path, n_rows, n_cols, frac, n_partitions, master, spark_home):
     gen_mat_args = (project_root, out_path, n_rows, n_cols, frac, n_partitions, master, spark_home)
@@ -61,7 +61,7 @@ def stochastic_factorize_and_time(project_root, in_path, out_path, rank, iter):
     return elapsed_time
 
 def make_hfds_path(matrix_name, n_rows, n_cols, frac, hdfs_root):
-    return hdfs_root + "/%s-nrow%s-ncols%s-sp%s/iter-%s" % (matrix_name, n_rows, n_cols, frac, iter)
+    return hdfs_root + "/%s-nrow%s-ncols%s-sp%s" % (matrix_name, n_rows, n_cols, frac)
 
 def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spark_home,
                           project_home,
@@ -83,11 +83,11 @@ def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spar
         csv_writer.writerow([spark_factorize_and_time(project_home, gen_mat_path, out_u, out_s,
                                                       out_v, master, spark_home, rank, idx)]
                         + ['spark', n_rows, n_cols, frac])
-    for idx in range(n_samples):
-        print "Mahout Lanczos SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
-        csv_writer.writerow([lanczos_factorize_and_time(project_home, gen_mat_path, out_lan,
-                                                        n_rows, n_cols, 3 * rank, idx)]
-                        + ['lanczos', n_rows, n_cols, frac])
+
+    print "Mahout Lanczos SVDing the matrix stored in [%s]." % gen_mat_path
+    csv_writer.writerow([lanczos_factorize_and_time(project_home, gen_mat_path, out_lan, n_rows,
+                                                    n_cols, 3 * rank, idx)] + ['lanczos', n_rows,
+                                                                               n_cols, frac])
 
     for idx in range(n_samples):
         print "Mahout Stochastic SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
@@ -96,7 +96,7 @@ def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spar
                         + ['stoch', n_rows, n_cols, frac])
 
 def main():
-    rows = [1000000]#, 15000000, 20000000
+    rows = [1000000, 2000000, 4000000, 16000000]
     # .8Gb and 80GB gramian matrices for this many columns. Spark needs at least twice this in driver memory.
     n_cols=1000
     frac=[0.2]
@@ -106,7 +106,7 @@ def main():
     rank=10
     project_root="/home/juliet/src/svd-benchmark"
     hdfs_root="hdfs:///user/juliet/matrix"
-    n_samples=3
+    n_samples=1
 
     # Setup our env
     sub.call(["chmod +x %s/scripts/gen-matrix.sh" % project_root], shell=True)
@@ -114,12 +114,13 @@ def main():
     sub.call(["chmod +x %s/scripts/lanczos-svd.sh" % project_root], shell=True)
     sub.call(["chmod +x %s/scripts/stochastic-svd.sh" % project_root], shell=True)
 
-    with open('results/experiment.csv', 'wb') as exp_rez:
+    with open('results/observations.csv', 'wb') as exp_rez:
         observation_writer = csv.writer(exp_rez, delimiter=",")
         for n_rows in rows:
             for sparse_frac in frac:
                 process_one_param_set(n_rows, n_cols, sparse_frac, rank, n_partitions, master,
                               spark_home, project_root, hdfs_root, observation_writer, n_samples)
+                exp_rez.flush()
 
 if __name__ == "__main__":
    main()
