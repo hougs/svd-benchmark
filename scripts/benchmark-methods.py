@@ -92,9 +92,9 @@ def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spar
                         + ['stoch', n_rows, n_cols, frac])
 
 def main():
-    rows = [1000000]#, 15000000, 20000000
+    rows = [10000]#, 15000000, 20000000
     # .8Gb and 80GB gramian matrices for this many columns. Spark needs at least twice this in driver memory.
-    n_cols=[1000000, 2000000, 4000000]
+    n_cols=1000000
     frac=[0.2]
     n_partitions=60
     master="yarn-client"
