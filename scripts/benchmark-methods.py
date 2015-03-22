@@ -61,7 +61,7 @@ def stochastic_factorize_and_time(project_root, in_path, out_path, rank, iter):
     return elapsed_time
 
 def make_hfds_path(matrix_name, n_rows, n_cols, frac, hdfs_root):
-    return hdfs_root + "/%s-nrow%s-ncols%s-sp%s/iter-%s" % (matrix_name, n_rows, n_cols, frac, iter)
+    return hdfs_root + "/%s-nrow%s-ncols%s-sp%s" % (matrix_name, n_rows, n_cols, frac)
 
 def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spark_home,
                           project_home,
