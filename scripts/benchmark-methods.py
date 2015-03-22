@@ -22,6 +22,7 @@ def time_it(command):
 def generate_matrix(project_root, out_path, n_rows, n_cols, frac, n_partitions, master, spark_home):
     gen_mat_args = (project_root, out_path, n_rows, n_cols, frac, n_partitions, master, spark_home)
     gen_mat_cmd = "%s/scripts/gen-matrix.sh %s %s %s %s %s %s %s" % gen_mat_args
+    print gen_mat_cmd
     try:
         sub.call(gen_mat_cmd, shell=True)
     except OSError:
