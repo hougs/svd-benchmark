@@ -10,18 +10,15 @@ import org.apache.spark.SparkContext
 import org.apache.spark.mllib.linalg.distributed.RowMatrix
 import org.apache.spark.mllib.linalg.{Matrix, Vectors, Vector => SparkVector}
 import org.apache.spark.rdd.RDD
-import org.apache.log4j.Logger
 
 import scala.collection.JavaConverters._
 
 object DataIO {
-  val LOG = Logger.getLogger(DataIO.getClass())
   /** Convert a Mahout vector to a Spark vector*/
   def mahoutToSparkVec(vec: VectorWritable): SparkVector = {
     val inVector = vec.get()
     val inVec: Iterable[MahoutVector.Element] = vec.get().nonZeroes.asScala
     val idxVals = inVector.nonZeroes().asScala.map((elem: MahoutVector.Element) => (elem.index, elem.get))
-    LOG.info(s"in size is ${inVector.size()} and idx vals are ${idxVals.toSeq.toString()}")
     Vectors.sparse(inVector.size(), idxVals.toSeq)
   }
 

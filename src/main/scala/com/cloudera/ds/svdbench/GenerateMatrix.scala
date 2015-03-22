@@ -54,6 +54,7 @@ object GenerateMatrix extends ArgMain[GenMatrixArgs] {
     val conf = new SparkConf()
     conf.setMaster(master)
     conf.setAppName("Generate Matrix. ")
+    conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
     conf
   }
 

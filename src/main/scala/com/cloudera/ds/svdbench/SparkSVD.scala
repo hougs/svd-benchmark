@@ -20,6 +20,7 @@ object SparkSVD extends ArgMain[SVDArgs] {
     val conf = new SparkConf()
     conf.setMaster(master)
     conf.setAppName("Spark SVD")
+    conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
     conf
   }
 

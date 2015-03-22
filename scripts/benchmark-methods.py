@@ -39,7 +39,7 @@ def spark_factorize_and_time(project_root, in_path, out_u, out_s, out_v, master,
     return elapsed_time
 
 def lanczos_factorize_and_time(project_root, in_path, out_path, n_rows, n_cols, rank):
-    lan_args = (project_root, in_path, out_path, n_rows, n_cols, rank)
+    lan_args = (project_root, in_path, out_path, n_rows, n_cols, rank*2)
     lan_cmd = "%s/scripts/lanczos-svd.sh %s %s %s %s %s" % lan_args
     try:
         elapsed_time = time_it(lan_cmd)
@@ -94,12 +94,12 @@ def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spar
 def main():
     rows = [1000000]#, 15000000, 20000000
     # .8Gb and 80GB gramian matrices for this many columns. Spark needs at least twice this in driver memory.
-    n_cols=1000
+    n_cols=[1000000, 2000000, 4000000]
     frac=[0.2]
     n_partitions=60
     master="yarn-client"
     spark_home="/home/juliet/bin/spark-1.3.0-bin-hadoop2.4"
-    rank=20
+    rank=10
     project_root="/home/juliet/src/svd-benchmark"
     hdfs_root="hdfs:///user/juliet/matrix"
     n_samples=3
