@@ -29,7 +29,7 @@ object GenerateMatrix extends ArgMain[GenMatrixArgs] {
     val log = new Log()
     val ceil = new Ceil()
     while (idx < size) {
-      idx += ceil.value(dataGen.nextExponential(-log.value(1.0-fracNonZero) ))
+      idx += ceil.value(dataGen.nextExponential(-log.value(1.0-fracNonZero))).toInt
       vec.setQuick(idx, 1.0)
     }
     vec
