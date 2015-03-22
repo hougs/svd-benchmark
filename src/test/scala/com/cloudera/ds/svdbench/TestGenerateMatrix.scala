@@ -15,6 +15,7 @@ class TestGenerateMatrix extends SparkTestUtils with ShouldMatchers {
     val matrix = GenerateMatrix.generateSparseMatrix(nRows, nCols, sparsity, 10, sc)
     matrix.count() shouldEqual 300L
     val nNonZero = matrix.values.map(vec => vec.get.getNumNonZeroElements).sum()
+    println( nNonZero/(nRows * nCols))
     math.abs(nNonZero/(nRows * nCols) - sparsity)  should be < 0.05
   }
 }

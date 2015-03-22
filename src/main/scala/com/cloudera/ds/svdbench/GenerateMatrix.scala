@@ -28,8 +28,10 @@ object GenerateMatrix extends ArgMain[GenMatrixArgs] {
     var idx = -1
     val log = new Log()
     while (idx < size) {
-      idx += Math.ceil(dataGen.nextExponential(-log.value(1.0-fracNonZero))).toInt
-      vec.setQuick(idx, 1.0)
+      idx += Math.ceil(dataGen.nextExponential(-1 /log.value(1.0-fracNonZero))).toInt
+      if (idx > -1 && idx < size) {
+        vec.setQuick(idx, 1.0)
+      }
     }
     vec
   }
