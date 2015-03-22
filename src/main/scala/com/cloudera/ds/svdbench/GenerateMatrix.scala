@@ -38,15 +38,16 @@ object GenerateMatrix extends ArgMain[GenMatrixArgs] {
 
   /** nRows is rounded up to the nearest thousand*/
   def generateSparseMatrix(nRows: Int, nCols: Int, fracNonZero: Double,
-                           nPartitions: Int, sc: SparkContext): RDD[(IntWritable,
-    VectorWritable)] = {
+                           nPartitions: Int, sc: SparkContext): RDD[VectorWritable] = {
     val rowBlockSize: Int = nRows / nPartitions
-    val rowBlockIndex = Array.range(0, nRows, rowBlockSize)
+    //val rowBlockIndex = Array.range(0, nRows, rowBlockSize)
 
-    val rowBlocks: RDD[Int] = sc.parallelize(rowBlockIndex, nPartitions)
-    val rows: RDD[Int] = rowBlocks.flatMap(blockIdx => Array.range(blockIdx, blockIdx + rowBlockSize))
-    val matrix = rows.map(rowIdx => (new IntWritable(rowIdx),
-      new VectorWritable(makeRandomSparseVec(nCols, fracNonZero))))
+    val rowBlocks: RDD[Int] = sc.parallelize(Seq[Int](), nPartitions)
+    val rows: RDD[Iterator[Int]] = rowBlocks.mapPartitions(valueIterator =>
+      Iterator.range(0, rowBlockSize))
+    )
+    val matrix: RDD[VectorWritable] = rows.flatMap(rowIndices => rowIndices.map(rowIdx =>
+      new VectorWritable(makeRandomSparseVec(nCols, fracNonZero)))
     matrix
   }
 
