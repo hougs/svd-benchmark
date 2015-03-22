@@ -1,0 +1,224 @@
+
+
+Container: container_1419382555234_0765_01_000001 on bottou02-10g.pa.cloudera.com_8041
+========================================================================================
+LogType: stderr
+LogLength: 15544
+Log Contents:
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/data/11/yarn/nm/filecache/1569/spark-assembly-1.3.0-hadoop2.4.0.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/jars/slf4j-log4j12-1.7.5.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.slf4j.impl.Log4jLoggerFactory]
+15/03/21 23:45:31 INFO yarn.ApplicationMaster: Registered signal handlers for [TERM, HUP, INT]
+15/03/21 23:45:32 INFO yarn.ApplicationMaster: ApplicationAttemptId: appattempt_1419382555234_0765_000001
+15/03/21 23:45:32 INFO spark.SecurityManager: Changing view acls to: yarn,juliet
+15/03/21 23:45:32 INFO spark.SecurityManager: Changing modify acls to: yarn,juliet
+15/03/21 23:45:32 INFO spark.SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: Set(yarn, juliet); users with modify permissions: Set(yarn, juliet)
+15/03/21 23:45:32 INFO yarn.ApplicationMaster: Starting the user application in a separate Thread
+15/03/21 23:45:32 INFO yarn.ApplicationMaster: Waiting for spark context initialization
+15/03/21 23:45:32 INFO yarn.ApplicationMaster: Waiting for spark context initialization ... 
+15/03/21 23:45:32 INFO spark.SparkContext: Running Spark version 1.3.0
+15/03/21 23:45:33 INFO spark.SecurityManager: Changing view acls to: yarn,juliet
+15/03/21 23:45:33 INFO spark.SecurityManager: Changing modify acls to: yarn,juliet
+15/03/21 23:45:33 INFO spark.SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: Set(yarn, juliet); users with modify permissions: Set(yarn, juliet)
+15/03/21 23:45:33 INFO slf4j.Slf4jLogger: Slf4jLogger started
+15/03/21 23:45:33 INFO Remoting: Starting remoting
+15/03/21 23:45:33 INFO Remoting: Remoting started; listening on addresses :[akka.tcp://sparkDriver@bottou02-10g.pa.cloudera.com:34064]
+15/03/21 23:45:33 INFO util.Utils: Successfully started service 'sparkDriver' on port 34064.
+15/03/21 23:45:33 INFO spark.SparkEnv: Registering MapOutputTracker
+15/03/21 23:45:33 INFO spark.SparkEnv: Registering BlockManagerMaster
+15/03/21 23:45:33 INFO storage.DiskBlockManager: Created local directory at /data/1/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-9591d559-0d29-4e7f-ae92-740ebd0eca9f
+15/03/21 23:45:33 INFO storage.DiskBlockManager: Created local directory at /data/10/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-e22549e5-3b5d-423e-82eb-ba46b8cd1914
+15/03/21 23:45:33 INFO storage.DiskBlockManager: Created local directory at /data/11/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-1d3d57e1-d41e-4d35-ae96-640cc33776b8
+15/03/21 23:45:33 INFO storage.DiskBlockManager: Created local directory at /data/2/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-cc3d00c7-9a0b-4b91-90d0-a8ab29161789
+15/03/21 23:45:33 INFO storage.DiskBlockManager: Created local directory at /data/3/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-269347a6-bf68-4484-8641-87fded628177
+15/03/21 23:45:33 INFO storage.DiskBlockManager: Created local directory at /data/4/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-c15e4eb2-48f2-4c80-a56e-c2940875d7a7
+15/03/21 23:45:33 INFO storage.DiskBlockManager: Created local directory at /data/5/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-e2f59910-9afb-46ae-84ee-d710b1bab744
+15/03/21 23:45:33 INFO storage.DiskBlockManager: Created local directory at /data/6/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-3f1b939a-8c34-4f64-b1fc-7062b3687e56
+15/03/21 23:45:33 INFO storage.DiskBlockManager: Created local directory at /data/7/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-152e3a20-1d6b-40ca-8a94-6fca5c0a8511
+15/03/21 23:45:33 INFO storage.DiskBlockManager: Created local directory at /data/8/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-ea94fef2-b5e2-4f1c-b52c-c0e0829f5e77
+15/03/21 23:45:33 INFO storage.DiskBlockManager: Created local directory at /data/9/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-86a629b7-e69f-4cf0-87f3-3c79642dddda
+15/03/21 23:45:33 INFO storage.MemoryStore: MemoryStore started with capacity 2.4 GB
+15/03/21 23:45:33 INFO spark.HttpFileServer: HTTP File server directory is /data/1/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/httpd-c1eace57-e0bb-4300-9da4-7406c3d54b45
+15/03/21 23:45:33 INFO spark.HttpServer: Starting HTTP Server
+15/03/21 23:45:33 INFO server.Server: jetty-8.y.z-SNAPSHOT
+15/03/21 23:45:33 INFO server.AbstractConnector: Started SocketConnector@0.0.0.0:47266
+15/03/21 23:45:33 INFO util.Utils: Successfully started service 'HTTP file server' on port 47266.
+15/03/21 23:45:33 INFO spark.SparkEnv: Registering OutputCommitCoordinator
+15/03/21 23:45:34 INFO ui.JettyUtils: Adding filter: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+15/03/21 23:45:34 INFO server.Server: jetty-8.y.z-SNAPSHOT
+15/03/21 23:45:34 INFO server.AbstractConnector: Started SelectChannelConnector@0.0.0.0:59747
+15/03/21 23:45:34 INFO util.Utils: Successfully started service 'SparkUI' on port 59747.
+15/03/21 23:45:34 INFO ui.SparkUI: Started SparkUI at http://bottou02-10g.pa.cloudera.com:59747
+15/03/21 23:45:34 INFO executor.Executor: Starting executor ID <driver> on host localhost
+15/03/21 23:45:34 INFO util.AkkaUtils: Connecting to HeartbeatReceiver: akka.tcp://sparkDriver@bottou02-10g.pa.cloudera.com:34064/user/HeartbeatReceiver
+15/03/21 23:45:34 INFO netty.NettyBlockTransferService: Server created on 53943
+15/03/21 23:45:34 INFO storage.BlockManagerMaster: Trying to register BlockManager
+15/03/21 23:45:34 INFO storage.BlockManagerMasterActor: Registering block manager localhost:53943 with 2.4 GB RAM, BlockManagerId(<driver>, localhost, 53943)
+15/03/21 23:45:34 INFO storage.BlockManagerMaster: Registered BlockManager
+15/03/21 23:45:34 INFO Configuration.deprecation: mapred.output.dir is deprecated. Instead, use mapreduce.output.fileoutputformat.outputdir
+15/03/21 23:45:35 INFO spark.SparkContext: Starting job: saveAsNewAPIHadoopFile at DataIO.scala:42
+15/03/21 23:45:35 INFO scheduler.DAGScheduler: Got job 0 (saveAsNewAPIHadoopFile at DataIO.scala:42) with 10 output partitions (allowLocal=false)
+15/03/21 23:45:35 INFO scheduler.DAGScheduler: Final stage: Stage 0(saveAsNewAPIHadoopFile at DataIO.scala:42)
+15/03/21 23:45:35 INFO scheduler.DAGScheduler: Parents of final stage: List()
+15/03/21 23:45:35 INFO scheduler.DAGScheduler: Missing parents: List()
+15/03/21 23:45:35 INFO scheduler.DAGScheduler: Submitting Stage 0 (MapPartitionsRDD[2] at map at GenerateMatrix.scala:47), which has no missing parents
+15/03/21 23:45:35 INFO storage.MemoryStore: ensureFreeSpace(60480) called with curMem=0, maxMem=2576917463
+15/03/21 23:45:35 INFO storage.MemoryStore: Block broadcast_0 stored as values in memory (estimated size 59.1 KB, free 2.4 GB)
+15/03/21 23:45:35 INFO storage.MemoryStore: ensureFreeSpace(38145) called with curMem=60480, maxMem=2576917463
+15/03/21 23:45:35 INFO storage.MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 37.3 KB, free 2.4 GB)
+15/03/21 23:45:35 INFO storage.BlockManagerInfo: Added broadcast_0_piece0 in memory on localhost:53943 (size: 37.3 KB, free: 2.4 GB)
+15/03/21 23:45:35 INFO storage.BlockManagerMaster: Updated info of block broadcast_0_piece0
+15/03/21 23:45:35 INFO spark.SparkContext: Created broadcast 0 from broadcast at DAGScheduler.scala:839
+15/03/21 23:45:35 INFO scheduler.DAGScheduler: Submitting 10 missing tasks from Stage 0 (MapPartitionsRDD[2] at map at GenerateMatrix.scala:47)
+15/03/21 23:45:35 INFO scheduler.TaskSchedulerImpl: Adding task set 0.0 with 10 tasks
+15/03/21 23:45:35 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0, localhost, PROCESS_LOCAL, 1204 bytes)
+15/03/21 23:45:35 INFO executor.Executor: Running task 0.0 in stage 0.0 (TID 0)
+15/03/21 23:45:36 INFO output.FileOutputCommitter: Saved output of task 'attempt_201503212345_0002_r_000000_0' to hdfs://bottou01-10g.pa.cloudera.com:8020/user/juliet/matrix-svd0/_temporary/0/task_201503212345_0002_r_000000
+15/03/21 23:45:36 INFO executor.Executor: Finished task 0.0 in stage 0.0 (TID 0). 657 bytes result sent to driver
+15/03/21 23:45:36 INFO scheduler.TaskSetManager: Starting task 1.0 in stage 0.0 (TID 1, localhost, PROCESS_LOCAL, 1204 bytes)
+15/03/21 23:45:36 INFO executor.Executor: Running task 1.0 in stage 0.0 (TID 1)
+15/03/21 23:45:36 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 0.0 (TID 0) in 1366 ms on localhost (1/10)
+15/03/21 23:45:37 INFO output.FileOutputCommitter: Saved output of task 'attempt_201503212345_0002_r_000001_0' to hdfs://bottou01-10g.pa.cloudera.com:8020/user/juliet/matrix-svd0/_temporary/0/task_201503212345_0002_r_000001
+15/03/21 23:45:37 INFO executor.Executor: Finished task 1.0 in stage 0.0 (TID 1). 657 bytes result sent to driver
+15/03/21 23:45:37 INFO scheduler.TaskSetManager: Starting task 2.0 in stage 0.0 (TID 2, localhost, PROCESS_LOCAL, 1204 bytes)
+15/03/21 23:45:37 INFO executor.Executor: Running task 2.0 in stage 0.0 (TID 2)
+15/03/21 23:45:37 INFO scheduler.TaskSetManager: Finished task 1.0 in stage 0.0 (TID 1) in 723 ms on localhost (2/10)
+15/03/21 23:45:38 INFO output.FileOutputCommitter: Saved output of task 'attempt_201503212345_0002_r_000002_0' to hdfs://bottou01-10g.pa.cloudera.com:8020/user/juliet/matrix-svd0/_temporary/0/task_201503212345_0002_r_000002
+15/03/21 23:45:38 INFO executor.Executor: Finished task 2.0 in stage 0.0 (TID 2). 657 bytes result sent to driver
+15/03/21 23:45:38 INFO scheduler.TaskSetManager: Starting task 3.0 in stage 0.0 (TID 3, localhost, PROCESS_LOCAL, 1204 bytes)
+15/03/21 23:45:38 INFO executor.Executor: Running task 3.0 in stage 0.0 (TID 3)
+15/03/21 23:45:38 INFO scheduler.TaskSetManager: Finished task 2.0 in stage 0.0 (TID 2) in 752 ms on localhost (3/10)
+15/03/21 23:45:38 INFO output.FileOutputCommitter: Saved output of task 'attempt_201503212345_0002_r_000003_0' to hdfs://bottou01-10g.pa.cloudera.com:8020/user/juliet/matrix-svd0/_temporary/0/task_201503212345_0002_r_000003
+15/03/21 23:45:38 INFO executor.Executor: Finished task 3.0 in stage 0.0 (TID 3). 657 bytes result sent to driver
+15/03/21 23:45:38 INFO scheduler.TaskSetManager: Starting task 4.0 in stage 0.0 (TID 4, localhost, PROCESS_LOCAL, 1204 bytes)
+15/03/21 23:45:38 INFO executor.Executor: Running task 4.0 in stage 0.0 (TID 4)
+15/03/21 23:45:38 INFO scheduler.TaskSetManager: Finished task 3.0 in stage 0.0 (TID 3) in 685 ms on localhost (4/10)
+15/03/21 23:45:39 INFO output.FileOutputCommitter: Saved output of task 'attempt_201503212345_0002_r_000004_0' to hdfs://bottou01-10g.pa.cloudera.com:8020/user/juliet/matrix-svd0/_temporary/0/task_201503212345_0002_r_000004
+15/03/21 23:45:39 INFO executor.Executor: Finished task 4.0 in stage 0.0 (TID 4). 657 bytes result sent to driver
+15/03/21 23:45:39 INFO scheduler.TaskSetManager: Starting task 5.0 in stage 0.0 (TID 5, localhost, PROCESS_LOCAL, 1204 bytes)
+15/03/21 23:45:39 INFO executor.Executor: Running task 5.0 in stage 0.0 (TID 5)
+15/03/21 23:45:39 INFO scheduler.TaskSetManager: Finished task 4.0 in stage 0.0 (TID 4) in 726 ms on localhost (5/10)
+15/03/21 23:45:40 INFO output.FileOutputCommitter: Saved output of task 'attempt_201503212345_0002_r_000005_0' to hdfs://bottou01-10g.pa.cloudera.com:8020/user/juliet/matrix-svd0/_temporary/0/task_201503212345_0002_r_000005
+15/03/21 23:45:40 INFO executor.Executor: Finished task 5.0 in stage 0.0 (TID 5). 657 bytes result sent to driver
+15/03/21 23:45:40 INFO scheduler.TaskSetManager: Starting task 6.0 in stage 0.0 (TID 6, localhost, PROCESS_LOCAL, 1204 bytes)
+15/03/21 23:45:40 INFO executor.Executor: Running task 6.0 in stage 0.0 (TID 6)
+15/03/21 23:45:40 INFO scheduler.TaskSetManager: Finished task 5.0 in stage 0.0 (TID 5) in 735 ms on localhost (6/10)
+15/03/21 23:45:42 INFO output.FileOutputCommitter: Saved output of task 'attempt_201503212345_0002_r_000006_0' to hdfs://bottou01-10g.pa.cloudera.com:8020/user/juliet/matrix-svd0/_temporary/0/task_201503212345_0002_r_000006
+15/03/21 23:45:42 INFO executor.Executor: Finished task 6.0 in stage 0.0 (TID 6). 657 bytes result sent to driver
+15/03/21 23:45:42 INFO scheduler.TaskSetManager: Starting task 7.0 in stage 0.0 (TID 7, localhost, PROCESS_LOCAL, 1204 bytes)
+15/03/21 23:45:42 INFO executor.Executor: Running task 7.0 in stage 0.0 (TID 7)
+15/03/21 23:45:42 INFO scheduler.TaskSetManager: Finished task 6.0 in stage 0.0 (TID 6) in 2018 ms on localhost (7/10)
+15/03/21 23:45:42 INFO yarn.ApplicationMaster: Waiting for spark context initialization ... 
+15/03/21 23:45:43 INFO output.FileOutputCommitter: Saved output of task 'attempt_201503212345_0002_r_000007_0' to hdfs://bottou01-10g.pa.cloudera.com:8020/user/juliet/matrix-svd0/_temporary/0/task_201503212345_0002_r_000007
+15/03/21 23:45:43 INFO executor.Executor: Finished task 7.0 in stage 0.0 (TID 7). 657 bytes result sent to driver
+15/03/21 23:45:43 INFO scheduler.TaskSetManager: Starting task 8.0 in stage 0.0 (TID 8, localhost, PROCESS_LOCAL, 1204 bytes)
+15/03/21 23:45:43 INFO executor.Executor: Running task 8.0 in stage 0.0 (TID 8)
+15/03/21 23:45:43 INFO scheduler.TaskSetManager: Finished task 7.0 in stage 0.0 (TID 7) in 952 ms on localhost (8/10)
+15/03/21 23:45:43 INFO output.FileOutputCommitter: Saved output of task 'attempt_201503212345_0002_r_000008_0' to hdfs://bottou01-10g.pa.cloudera.com:8020/user/juliet/matrix-svd0/_temporary/0/task_201503212345_0002_r_000008
+15/03/21 23:45:43 INFO executor.Executor: Finished task 8.0 in stage 0.0 (TID 8). 657 bytes result sent to driver
+15/03/21 23:45:43 INFO scheduler.TaskSetManager: Starting task 9.0 in stage 0.0 (TID 9, localhost, PROCESS_LOCAL, 1204 bytes)
+15/03/21 23:45:43 INFO executor.Executor: Running task 9.0 in stage 0.0 (TID 9)
+15/03/21 23:45:43 INFO scheduler.TaskSetManager: Finished task 8.0 in stage 0.0 (TID 8) in 702 ms on localhost (9/10)
+15/03/21 23:45:44 INFO output.FileOutputCommitter: Saved output of task 'attempt_201503212345_0002_r_000009_0' to hdfs://bottou01-10g.pa.cloudera.com:8020/user/juliet/matrix-svd0/_temporary/0/task_201503212345_0002_r_000009
+15/03/21 23:45:44 INFO executor.Executor: Finished task 9.0 in stage 0.0 (TID 9). 657 bytes result sent to driver
+15/03/21 23:45:44 INFO scheduler.TaskSetManager: Finished task 9.0 in stage 0.0 (TID 9) in 663 ms on localhost (10/10)
+15/03/21 23:45:44 INFO scheduler.DAGScheduler: Stage 0 (saveAsNewAPIHadoopFile at DataIO.scala:42) finished in 9.320 s
+15/03/21 23:45:44 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool 
+15/03/21 23:45:44 INFO scheduler.DAGScheduler: Job 0 finished: saveAsNewAPIHadoopFile at DataIO.scala:42, took 9.583255 s
+15/03/21 23:45:44 INFO yarn.ApplicationMaster: Final app status: SUCCEEDED, exitCode: 0
+15/03/21 23:45:52 ERROR yarn.ApplicationMaster: SparkContext did not initialize after waiting for 100000 ms. Please check earlier log output for errors. Failing the application.
+15/03/21 23:45:52 INFO yarn.ApplicationMaster: Unregistering ApplicationMaster with SUCCEEDED
+15/03/21 23:45:52 INFO yarn.ApplicationMaster: Deleting staging directory .sparkStaging/application_1419382555234_0765
+
+LogType: stdout
+LogLength: 0
+Log Contents:
+
+
+
+Container: container_1419382555234_0765_02_000001 on bottou02-10g.pa.cloudera.com_8041
+========================================================================================
+LogType: stderr
+LogLength: 8402
+Log Contents:
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/data/11/yarn/nm/filecache/1569/spark-assembly-1.3.0-hadoop2.4.0.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/opt/cloudera/parcels/CDH-5.3.0-1.cdh5.3.0.p0.30/jars/slf4j-log4j12-1.7.5.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.slf4j.impl.Log4jLoggerFactory]
+15/03/21 23:46:00 INFO yarn.ApplicationMaster: Registered signal handlers for [TERM, HUP, INT]
+15/03/21 23:46:01 INFO yarn.ApplicationMaster: ApplicationAttemptId: appattempt_1419382555234_0765_000002
+15/03/21 23:46:02 INFO spark.SecurityManager: Changing view acls to: yarn,juliet
+15/03/21 23:46:02 INFO spark.SecurityManager: Changing modify acls to: yarn,juliet
+15/03/21 23:46:02 INFO spark.SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: Set(yarn, juliet); users with modify permissions: Set(yarn, juliet)
+15/03/21 23:46:02 INFO yarn.ApplicationMaster: Starting the user application in a separate Thread
+15/03/21 23:46:02 INFO yarn.ApplicationMaster: Waiting for spark context initialization
+15/03/21 23:46:02 INFO yarn.ApplicationMaster: Waiting for spark context initialization ... 
+15/03/21 23:46:02 INFO spark.SparkContext: Running Spark version 1.3.0
+15/03/21 23:46:02 INFO spark.SecurityManager: Changing view acls to: yarn,juliet
+15/03/21 23:46:02 INFO spark.SecurityManager: Changing modify acls to: yarn,juliet
+15/03/21 23:46:02 INFO spark.SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: Set(yarn, juliet); users with modify permissions: Set(yarn, juliet)
+15/03/21 23:46:02 INFO slf4j.Slf4jLogger: Slf4jLogger started
+15/03/21 23:46:03 INFO Remoting: Starting remoting
+15/03/21 23:46:03 INFO Remoting: Remoting started; listening on addresses :[akka.tcp://sparkDriver@bottou02-10g.pa.cloudera.com:51617]
+15/03/21 23:46:03 INFO util.Utils: Successfully started service 'sparkDriver' on port 51617.
+15/03/21 23:46:03 INFO spark.SparkEnv: Registering MapOutputTracker
+15/03/21 23:46:03 INFO spark.SparkEnv: Registering BlockManagerMaster
+15/03/21 23:46:03 INFO storage.DiskBlockManager: Created local directory at /data/1/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-0ae7e17f-7cf5-42b3-a5dd-b1a3288b3122
+15/03/21 23:46:03 INFO storage.DiskBlockManager: Created local directory at /data/10/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-0a87e1cb-daf1-457a-a863-020b9f46b65c
+15/03/21 23:46:03 INFO storage.DiskBlockManager: Created local directory at /data/11/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-86304faf-b056-482a-b224-3419c246509a
+15/03/21 23:46:03 INFO storage.DiskBlockManager: Created local directory at /data/2/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-20e51ead-5900-4b4b-a45e-cd6a74635cc9
+15/03/21 23:46:03 INFO storage.DiskBlockManager: Created local directory at /data/3/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-063d00ff-ea9d-44b9-9cc2-8162ad17c201
+15/03/21 23:46:03 INFO storage.DiskBlockManager: Created local directory at /data/4/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-9b538daf-6750-4397-b6ca-5c4d4c238703
+15/03/21 23:46:03 INFO storage.DiskBlockManager: Created local directory at /data/5/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-3a42cef3-173d-4c4c-8c12-928007368a01
+15/03/21 23:46:03 INFO storage.DiskBlockManager: Created local directory at /data/6/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-c25e037c-2080-4057-a34e-3745e780f608
+15/03/21 23:46:03 INFO storage.DiskBlockManager: Created local directory at /data/7/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-30b0e5a4-4194-4357-99ee-4855f10c045f
+15/03/21 23:46:03 INFO storage.DiskBlockManager: Created local directory at /data/8/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-d888e9fe-9f42-4ade-af68-93e8786dcaed
+15/03/21 23:46:03 INFO storage.DiskBlockManager: Created local directory at /data/9/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/blockmgr-e29de61c-c688-4345-9d6d-259519c51ffc
+15/03/21 23:46:03 INFO storage.MemoryStore: MemoryStore started with capacity 2.4 GB
+15/03/21 23:46:03 INFO spark.HttpFileServer: HTTP File server directory is /data/1/yarn/nm/usercache/juliet/appcache/application_1419382555234_0765/httpd-25d038e6-128c-482b-918f-2c1a10adaebb
+15/03/21 23:46:03 INFO spark.HttpServer: Starting HTTP Server
+15/03/21 23:46:03 INFO server.Server: jetty-8.y.z-SNAPSHOT
+15/03/21 23:46:03 INFO server.AbstractConnector: Started SocketConnector@0.0.0.0:45379
+15/03/21 23:46:03 INFO util.Utils: Successfully started service 'HTTP file server' on port 45379.
+15/03/21 23:46:03 INFO spark.SparkEnv: Registering OutputCommitCoordinator
+15/03/21 23:46:03 INFO ui.JettyUtils: Adding filter: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+15/03/21 23:46:03 INFO server.Server: jetty-8.y.z-SNAPSHOT
+15/03/21 23:46:03 INFO server.AbstractConnector: Started SelectChannelConnector@0.0.0.0:55658
+15/03/21 23:46:03 INFO util.Utils: Successfully started service 'SparkUI' on port 55658.
+15/03/21 23:46:03 INFO ui.SparkUI: Started SparkUI at http://bottou02-10g.pa.cloudera.com:55658
+15/03/21 23:46:03 INFO executor.Executor: Starting executor ID <driver> on host localhost
+15/03/21 23:46:03 INFO util.AkkaUtils: Connecting to HeartbeatReceiver: akka.tcp://sparkDriver@bottou02-10g.pa.cloudera.com:51617/user/HeartbeatReceiver
+15/03/21 23:46:03 INFO netty.NettyBlockTransferService: Server created on 35040
+15/03/21 23:46:03 INFO storage.BlockManagerMaster: Trying to register BlockManager
+15/03/21 23:46:03 INFO storage.BlockManagerMasterActor: Registering block manager localhost:35040 with 2.4 GB RAM, BlockManagerId(<driver>, localhost, 35040)
+15/03/21 23:46:03 INFO storage.BlockManagerMaster: Registered BlockManager
+15/03/21 23:46:04 INFO Configuration.deprecation: mapred.output.dir is deprecated. Instead, use mapreduce.output.fileoutputformat.outputdir
+15/03/21 23:46:04 ERROR yarn.ApplicationMaster: User class threw exception: Output directory hdfs:/user/juliet/matrix-svd0 already exists
+org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory hdfs:/user/juliet/matrix-svd0 already exists
+	at org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.checkOutputSpecs(FileOutputFormat.java:146)
+	at org.apache.spark.rdd.PairRDDFunctions.saveAsNewAPIHadoopDataset(PairRDDFunctions.scala:976)
+	at org.apache.spark.rdd.PairRDDFunctions.saveAsNewAPIHadoopFile(PairRDDFunctions.scala:903)
+	at com.cloudera.ds.svdbench.DataIO$.writeMahoutMatrix(DataIO.scala:42)
+	at com.cloudera.ds.svdbench.GenerateMatrix$.main(GenerateMatrix.scala:63)
+	at com.cloudera.ds.svdbench.GenerateMatrix$.main(GenerateMatrix.scala:20)
+	at com.quantifind.sumac.ArgMain$class.mainHelper(ArgApp.scala:45)
+	at com.quantifind.sumac.ArgMain$class.main(ArgApp.scala:34)
+	at com.cloudera.ds.svdbench.GenerateMatrix$.main(GenerateMatrix.scala:20)
+	at com.cloudera.ds.svdbench.GenerateMatrix.main(GenerateMatrix.scala)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.apache.spark.deploy.yarn.ApplicationMaster$$anon$2.run(ApplicationMaster.scala:480)
+15/03/21 23:46:04 INFO yarn.ApplicationMaster: Final app status: FAILED, exitCode: 15, (reason: User class threw exception: Output directory hdfs:/user/juliet/matrix-svd0 already exists)
+15/03/21 23:46:12 ERROR yarn.ApplicationMaster: SparkContext did not initialize after waiting for 100000 ms. Please check earlier log output for errors. Failing the application.
+15/03/21 23:46:12 INFO yarn.ApplicationMaster: Unregistering ApplicationMaster with FAILED (diag message: User class threw exception: Output directory hdfs:/user/juliet/matrix-svd0 already exists)
+15/03/21 23:46:12 INFO yarn.ApplicationMaster: Deleting staging directory .sparkStaging/application_1419382555234_0765
+
+LogType: stdout
+LogLength: 0
+Log Contents:
+

@@ -19,9 +19,10 @@ def time_it(command):
         raise
     return end_time - start_time
 
-def generate_matrix(project_root, out_path, n_rows, n_cols, frac, block_size, master, spark_home):
-    gen_mat_args = (project_root, out_path, n_rows, n_cols, frac, block_size, master, spark_home)
+def generate_matrix(project_root, out_path, n_rows, n_cols, frac, n_partitions, master, spark_home):
+    gen_mat_args = (project_root, out_path, n_rows, n_cols, frac, n_partitions, master, spark_home)
     gen_mat_cmd = "%s/scripts/gen-matrix.sh %s %s %s %s %s %s %s" % gen_mat_args
+    print gen_mat_cmd
     try:
         sub.call(gen_mat_cmd, shell=True)
     except OSError:
@@ -60,7 +61,8 @@ def stochastic_factorize_and_time(project_root, in_path, out_path, rank):
 def make_hfds_path(matrix_name, n_rows, n_cols, frac, hdfs_root):
     return hdfs_root + "/%s-nrow%s-ncols%s-sp%s" % (matrix_name, n_rows, n_cols, frac)
 
-def process_one_param_set(n_rows, n_cols, frac, rank, block_size, master, spark_home, project_home,
+def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spark_home,
+                          project_home,
                           hdfs_root, csv_writer, n_samples):
     # setup paths for these matrices
     gen_mat_path=make_hfds_path("gen-matrix", n_rows, n_cols, frac, hdfs_root)
@@ -71,7 +73,7 @@ def process_one_param_set(n_rows, n_cols, frac, rank, block_size, master, spark_
     out_stoch=make_hfds_path("stochastic", n_rows, n_cols, frac, hdfs_root)
 
     print "Generating matrix that will be stored in [%s]." % gen_mat_path
-    generate_matrix(project_home, gen_mat_path, n_rows, n_cols, frac, block_size, master,
+    generate_matrix(project_home, gen_mat_path, n_rows, n_cols, frac, n_partitions, master,
      spark_home)
 
     for idx in range(n_samples):
@@ -90,12 +92,12 @@ def process_one_param_set(n_rows, n_cols, frac, rank, block_size, master, spark_
                         + ['stoch', n_rows, n_cols, frac])
 
 def main():
-    rows = [10000000]#, 15000000, 20000000
+    rows = [1000000]#, 15000000, 20000000
     # .8Gb and 80GB gramian matrices for this many columns. Spark needs at least twice this in driver memory.
     n_cols=1000
     frac=[0.2]
-    block_size=10000
-    master="yarn-cluster"
+    n_partitions=60
+    master="yarn-client"
     spark_home="/home/juliet/bin/spark-1.3.0-bin-hadoop2.4"
     rank=20
     project_root="/home/juliet/src/svd-benchmark"
@@ -112,7 +114,7 @@ def main():
         observation_writer = csv.writer(exp_rez, delimiter=",")
         for n_rows in rows:
             for sparse_frac in frac:
-                process_one_param_set(n_rows, n_cols, sparse_frac, rank, block_size, master,
+                process_one_param_set(n_rows, n_cols, sparse_frac, rank, n_partitions, master,
                               spark_home, project_root, hdfs_root, observation_writer, n_samples)
 
 if __name__ == "__main__":

@@ -1,11 +1,10 @@
 package com.cloudera.ds.svdbench
 
 import com.quantifind.sumac.{ArgMain, FieldArgs}
+import org.apache.commons.math3.analysis.function.Log
 import org.apache.commons.math3.random.RandomDataGenerator
-import org.apache.commons.math3.analysis.function.{Log, Ceil}
 import org.apache.hadoop.io.IntWritable
-import org.apache.mahout.math.{SequentialAccessSparseVector, RandomAccessSparseVector,
-VectorWritable}
+import org.apache.mahout.math.{SequentialAccessSparseVector, VectorWritable}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -28,9 +27,8 @@ object GenerateMatrix extends ArgMain[GenMatrixArgs] {
 
     var idx = -1
     val log = new Log()
-    val ceil = new Ceil()
     while (idx < size) {
-      idx += ceil.value(dataGen.nextExponential(-log.value(1.0-fracNonZero) ))
+      idx += Math.ceil(dataGen.nextExponential(-log.value(1.0-fracNonZero))).toInt
       vec.setQuick(idx, 1.0)
     }
     vec
@@ -43,9 +41,9 @@ object GenerateMatrix extends ArgMain[GenMatrixArgs] {
     val rowBlockSize: Int = nRows / nPartitions
     val rowBlockIndex = Array.range(0, nRows, rowBlockSize)
 
-    val rowIndices: RDD[Int] = sc.parallelize(Seq(), nPartitions)
-      .flatMap(blockIdx => Array.range(blockIdx, blockIdx + rowBlockSize))
-    val matrix = rowIndices.map(rowIdx => (new IntWritable(rowIdx),
+    val rowBlocks: RDD[Int] = sc.parallelize(rowBlockIndex, nPartitions)
+    val rows: RDD[Int] = rowBlocks.flatMap(blockIdx => Array.range(blockIdx, blockIdx + rowBlockSize))
+    val matrix = rows.map(rowIdx => (new IntWritable(rowIdx),
       new VectorWritable(makeRandomSparseVec(nCols, fracNonZero))))
     matrix
   }
