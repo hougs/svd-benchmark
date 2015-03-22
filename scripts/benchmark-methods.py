@@ -12,7 +12,7 @@ def time_it(command):
     try:
         start_time = time.clock()
         sub.check_output(command, shell=True, stderr=sub.STDOUT)
-        end_time = time.clock
+        end_time = time.clock()
     except sub.CalledProcessError, err:
         print "The command used to launch the failed subprocess is was [%s]." % err.cmd
         print "The output of the command was [%s]" % err.output
@@ -28,8 +28,10 @@ def generate_matrix(project_root, out_path, n_rows, n_cols, frac, n_partitions, 
     except OSError:
         print "Oops! OS Error. Could not run the command:\n %s" % gen_mat_cmd
 
-def spark_factorize_and_time(project_root, in_path, out_u, out_s, out_v, master, sparkHome, rank):
-    svd_args = (project_root, in_path, out_u, out_s, out_v, master, rank, sparkHome)
+def spark_factorize_and_time(project_root, in_path, out_u, out_s, out_v, master, sparkHome, rank,
+                             iter):
+    svd_args = (project_root, in_path, out_u + "/iter-%s" % iter, out_s, out_v, master, rank,
+                sparkHome)
     svd_cmd = "%s/scripts/spark-svd.sh %s %s %s %s %s %s %s" % svd_args
     try:
         elapsed_time = time_it(svd_cmd)
@@ -38,8 +40,8 @@ def spark_factorize_and_time(project_root, in_path, out_u, out_s, out_v, master,
         elapsed_time = "failed"
     return elapsed_time
 
-def lanczos_factorize_and_time(project_root, in_path, out_path, n_rows, n_cols, rank):
-    lan_args = (project_root, in_path, out_path, n_rows, n_cols, rank*2)
+def lanczos_factorize_and_time(project_root, in_path, out_path, n_rows, n_cols, rank, iter):
+    lan_args = (project_root, in_path, out_path+ "/iter-%s" % iter, n_rows, n_cols, rank*2)
     lan_cmd = "%s/scripts/lanczos-svd.sh %s %s %s %s %s" % lan_args
     try:
         elapsed_time = time_it(lan_cmd)
@@ -48,8 +50,8 @@ def lanczos_factorize_and_time(project_root, in_path, out_path, n_rows, n_cols, 
         elapsed_time = "failed"
     return elapsed_time
 
-def stochastic_factorize_and_time(project_root, in_path, out_path, rank):
-    stoch_args = (project_root, in_path, out_path, rank)
+def stochastic_factorize_and_time(project_root, in_path, out_path, rank, iter):
+    stoch_args = (project_root, in_path, out_path + "/iter-%s" % iter, rank)
     stoch_cmd = "%s/scripts/stochastic-svd.sh %s %s %s" % stoch_args
     try:
         elapsed_time = time_it(stoch_cmd)
@@ -59,7 +61,7 @@ def stochastic_factorize_and_time(project_root, in_path, out_path, rank):
     return elapsed_time
 
 def make_hfds_path(matrix_name, n_rows, n_cols, frac, hdfs_root):
-    return hdfs_root + "/%s-nrow%s-ncols%s-sp%s" % (matrix_name, n_rows, n_cols, frac)
+    return hdfs_root + "/%s-nrow%s-ncols%s-sp%s/iter-%s" % (matrix_name, n_rows, n_cols, frac, iter)
 
 def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spark_home,
                           project_home,
@@ -79,24 +81,26 @@ def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spar
     for idx in range(n_samples):
         print "Spark SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
         csv_writer.writerow([spark_factorize_and_time(project_home, gen_mat_path, out_u, out_s,
-                                                      out_v, master, spark_home, rank)]
+                                                      out_v, master, spark_home, rank, idx)]
                         + ['spark', n_rows, n_cols, frac])
     for idx in range(n_samples):
         print "Mahout Lanczos SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
-        csv_writer.writerow([lanczos_factorize_and_time(project_home, gen_mat_path, out_lan, n_rows, n_cols, 3 * rank)]
+        csv_writer.writerow([lanczos_factorize_and_time(project_home, gen_mat_path, out_lan,
+                                                        n_rows, n_cols, 3 * rank, idx)]
                         + ['lanczos', n_rows, n_cols, frac])
 
     for idx in range(n_samples):
         print "Mahout Stochastic SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
-        csv_writer.writerow([stochastic_factorize_and_time(project_home, gen_mat_path, out_stoch, rank + 5)]
+        csv_writer.writerow([stochastic_factorize_and_time(project_home, gen_mat_path, out_stoch,
+                                                           rank + 5, idx)]
                         + ['stoch', n_rows, n_cols, frac])
 
 def main():
     rows = [1000000]#, 15000000, 20000000
     # .8Gb and 80GB gramian matrices for this many columns. Spark needs at least twice this in driver memory.
-    n_cols=[1000000, 2000000, 4000000]
+    n_cols=1000
     frac=[0.2]
-    n_partitions=60
+    n_partitions=216
     master="yarn-client"
     spark_home="/home/juliet/bin/spark-1.3.0-bin-hadoop2.4"
     rank=10

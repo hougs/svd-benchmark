@@ -10,7 +10,7 @@ class SVDArgs extends FieldArgs {
   var outUPath = ""
   var outSPath = ""
   var outVPath = ""
-  var master = "local"
+  var master = "yarn-client"
   var rank = 20
 }
 
@@ -31,7 +31,7 @@ object SparkSVD extends ArgMain[SVDArgs] {
       computeU = true)
     // Write out svd to files.
     DataIO.writeSparkRowMatrix(args.outUPath, svd.U)
-    DataIO.writeSparkVector(args.outSPath, svd.s)
-    DataIO.writeSparkMatrix(args.outVPath, svd.V)
+    //DataIO.writeSparkVector(args.outSPath, svd.s)
+    //DataIO.writeSparkMatrix(args.outVPath, svd.V)
   }
 }
