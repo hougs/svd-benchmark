@@ -10,7 +10,7 @@ class SVDArgs extends FieldArgs {
   var outUPath = ""
   var outSPath = ""
   var outVPath = ""
-  var master = "local"
+  var master = "yarn-client"
   var rank = 20
 }
 

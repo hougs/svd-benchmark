@@ -10,7 +10,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 class GenMatrixArgs extends FieldArgs {
   var path: String = "hdfs://matrix"
-  var master: String = "local"
+  var master: String = "yarn-client"
   var nRows: Int = 10
   var nCols: Int = 10
   var fracNonZero: Double = 0.1
