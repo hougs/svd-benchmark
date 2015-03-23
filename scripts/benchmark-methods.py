@@ -76,7 +76,7 @@ def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spar
 
     print "Generating matrix that will be stored in [%s]." % gen_mat_path
     generate_matrix(project_home, gen_mat_path, n_rows, n_cols, frac, n_partitions, master,
-     spark_home)
+      spark_home)
 
     for idx in range(n_samples):
         print "Spark SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
@@ -94,6 +94,7 @@ def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spar
         csv_writer.writerow([stochastic_factorize_and_time(project_home, gen_mat_path, out_stoch,
                                                            rank + 5, idx)]
                         + ['stoch', n_rows, n_cols, frac])
+        sub.call("hadoop fs -rm -r temp/ssvd")
 
 def main():
     rows = [1000000, 2000000, 4000000, 16000000]
@@ -106,7 +107,7 @@ def main():
     rank=10
     project_root="/home/juliet/src/svd-benchmark"
     hdfs_root="hdfs:///user/juliet/matrix"
-    n_samples=1
+    n_samples=3
 
     # Setup our env
     sub.call(["chmod +x %s/scripts/gen-matrix.sh" % project_root], shell=True)
