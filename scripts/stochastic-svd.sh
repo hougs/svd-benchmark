@@ -13,4 +13,4 @@ INPUT=$1
 OUTPUT=$2
 RANK=$3
 
-mahout ssvd --input $INPUT --output $OUTPUT --rank $RANK --reduceTasks 100 -q 1
+mahout ssvd --input $INPUT --output $OUTPUT --rank $RANK --reduceTasks 10 -ow

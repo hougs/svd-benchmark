@@ -22,7 +22,6 @@ def time_it(command):
 def generate_matrix(project_root, out_path, n_rows, n_cols, frac, n_partitions, master, spark_home):
     gen_mat_args = (project_root, out_path, n_rows, n_cols, frac, n_partitions, master, spark_home)
     gen_mat_cmd = "%s/scripts/gen-matrix.sh %s %s %s %s %s %s %s" % gen_mat_args
-    print gen_mat_cmd
     try:
         sub.call(gen_mat_cmd, shell=True)
     except OSError:
@@ -76,7 +75,7 @@ def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spar
 
     print "Generating matrix that will be stored in [%s]." % gen_mat_path
     generate_matrix(project_home, gen_mat_path, n_rows, n_cols, frac, n_partitions, master,
-      spark_home)
+        spark_home)
 
     for idx in range(n_samples):
         print "Spark SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
@@ -92,9 +91,8 @@ def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spar
     for idx in range(n_samples):
         print "Mahout Stochastic SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
         csv_writer.writerow([stochastic_factorize_and_time(project_home, gen_mat_path, out_stoch,
-                                                           rank + 5, idx)]
+                                                           rank, idx)]
                         + ['stoch', n_rows, n_cols, frac])
-        sub.call("hadoop fs -rm -r temp/ssvd")
 
 def main():
     rows = [1000000, 2000000, 4000000, 16000000]
