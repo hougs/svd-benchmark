@@ -73,20 +73,20 @@ def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spar
     out_lan=make_hfds_path("lanczos", n_rows, n_cols, frac, hdfs_root)
     out_stoch=make_hfds_path("stochastic", n_rows, n_cols, frac, hdfs_root)
 
-    print "Generating matrix that will be stored in [%s]." % gen_mat_path
-    generate_matrix(project_home, gen_mat_path, n_rows, n_cols, frac, n_partitions, master,
-        spark_home)
+    #print "Generating matrix that will be stored in [%s]." % gen_mat_path
+    #generate_matrix(project_home, gen_mat_path, n_rows, n_cols, frac, n_partitions, master,
+    #    spark_home)
 
-    for idx in range(n_samples):
-        print "Spark SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
-        csv_writer.writerow([spark_factorize_and_time(project_home, gen_mat_path, out_u, out_s,
-                                                      out_v, master, spark_home, rank, idx)]
-                        + ['spark', n_rows, n_cols, frac])
+    #for idx in range(n_samples):
+    #    print "Spark SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
+    #    csv_writer.writerow([spark_factorize_and_time(project_home, gen_mat_path, out_u, out_s,
+    #                                                  out_v, master, spark_home, rank, idx)]
+    #                     + ['spark', n_rows, n_cols, frac])
 
-    print "Mahout Lanczos SVDing the matrix stored in [%s]." % gen_mat_path
-    csv_writer.writerow([lanczos_factorize_and_time(project_home, gen_mat_path, out_lan, n_rows,
-                                                    n_cols, 3 * rank, idx)] + ['lanczos', n_rows,
-                                                                               n_cols, frac])
+    #print "Mahout Lanczos SVDing the matrix stored in [%s]." % gen_mat_path
+    #csv_writer.writerow([lanczos_factorize_and_time(project_home, gen_mat_path, out_lan, n_rows,
+    #                                                n_cols, 3 * rank, idx)] + ['lanczos', n_rows,
+    #                                                                           n_cols, frac])
 
     for idx in range(n_samples):
         print "Mahout Stochastic SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
