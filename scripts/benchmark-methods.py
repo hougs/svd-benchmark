@@ -81,7 +81,7 @@ def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spar
         print "Spark SVDing the matrix stored in [%s]. On iteration [%s]." % (gen_mat_path, idx)
         csv_writer.writerow([spark_factorize_and_time(project_home, gen_mat_path, out_u, out_s,
                                                       out_v, master, spark_home, rank, idx)]
-                        + ['spark', n_rows, n_cols, frac])
+                         + ['spark', n_rows, n_cols, frac])
 
     print "Mahout Lanczos SVDing the matrix stored in [%s]." % gen_mat_path
     csv_writer.writerow([lanczos_factorize_and_time(project_home, gen_mat_path, out_lan, n_rows,
@@ -95,7 +95,7 @@ def process_one_param_set(n_rows, n_cols, frac, rank, n_partitions, master, spar
                         + ['stoch', n_rows, n_cols, frac])
 
 def main():
-    rows = [1000000, 2000000, 4000000, 16000000]
+    rows = [2000000, 4000000, 16000000]
     # .8Gb and 80GB gramian matrices for this many columns. Spark needs at least twice this in driver memory.
     n_cols=1000
     frac=[0.2]
