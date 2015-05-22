@@ -7,6 +7,19 @@ for their underlying frameworks:
 * Mahout's [Stochastic SVD](http://arxiv.org/abs/0909.4061) based SVD.
 * Spark's Lanczos' Method based SVD solver.
 
+## Results
+*Caveat Emptor*
 
+When I spent a reasonable amount of time
+configuring and tuning my cluster and jobs, these were the timing results I got:
+
+![vary columns of matrix](/results/varycols.png)
+
+![vary rows of matrix](/results/varyrows.png)
+
+![vary sparsity of matrix](/results/varysparsity.png)
+
+If you use this repo to run a com[parison, your results are very welcome!
+Of course, PRs on the code itself are also welcome.
 
 
